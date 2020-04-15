@@ -10,8 +10,11 @@ use Yiisoft\Yii\Web\ServerRequestFactory;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
+global $container;  // got it;
+
 // Don't do it in production, assembling takes it's time
-Builder::rebuild();
+Builder::rebuild(__DIR__);
+
 $startTime = microtime(true);
 $container = new Container(
     require Builder::path('web', dirname(__DIR__)),
@@ -20,6 +23,33 @@ $container = new Container(
 $container = $container->get(ContainerInterface::class);
 
 require_once dirname(__DIR__) . '/src/globals.php';
+
+////[[[[
+
+$path = realpath(__DIR__.'/..');
+$namespace = rtrim('MY\\', '\\');                    // @DUCKPHP_NAMESPACE
+$options=[];
+$options['path'] = $path;
+$options['namespace'] = $namespace;
+
+//$options['error_500'] = '_sys/error_500';
+//$options['error_debug'] = '_sys/error_debug';
+
+$options['skip_setting_file'] = true;
+$options['skip_404_handler'] = true;
+$options['skip_exception_check'] = true;
+//$options['handle_all_exception'] = false;
+
+$options['is_debug'] = true;                  // @DUCKPHP_DELETE
+
+\DuckPhp\App::G()->init($options);
+
+$flag=\DuckPhp\App::G()->run();
+if($flag){
+    return;
+}
+
+
 
 $application = $container->get(Application::class);
 

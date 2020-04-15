@@ -15,6 +15,9 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 
+use MY\Service\BlogService;
+
+
 final class BlogController extends Controller
 {
     private const POSTS_PER_PAGE = 3;
@@ -25,27 +28,11 @@ final class BlogController extends Controller
     {
         return 'blog';
     }
-
     public function index(Request $request, ORMInterface $orm, ArchiveRepository $archiveRepo): Response
     {
-        /** @var PostRepository $postRepo */
-        $postRepo = $orm->getRepository(Post::class);
-        /** @var TagRepository $tagRepo */
-        $tagRepo = $orm->getRepository(Tag::class);
-
         $pageNum = (int)$request->getAttribute('page', 1);
-
-        $dataReader = $postRepo->findAllPreloaded();
-
-        $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(self::POSTS_PER_PAGE)
-            ->withCurrentPage($pageNum);
-
-        $data = [
-            'paginator' => $paginator,
-            'archive' => $archiveRepo->getFullArchive()->withLimit(self::ARCHIVE_MONTHS_COUNT),
-            'tags' => $tagRepo->getTagMentions(self::POPULAR_TAGS_COUNT),
-        ];
+        $data = BlogService::G()->getDataToIndex($pageNum);
+        
         return $this->render('index', $data);
     }
 }
