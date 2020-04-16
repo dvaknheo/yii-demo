@@ -30,8 +30,8 @@ class BlogService extends BaseService
             ->withCurrentPage($pageNum);
 
         $archive = $this->getObject(ArchiveRepository::class)->getFullArchive()->withLimit(self::ARCHIVE_MONTHS_COUNT);
-        
         $tags = $this->getORM()->getRepository(Tag::class)->getTagMentions(self::POPULAR_TAGS_COUNT);
+        
         $data = [
             'paginator' => $paginator,
             'archive' => $archive,
@@ -39,32 +39,27 @@ class BlogService extends BaseService
         ];
         return $data;
     }
-    public function getPostData()
+    public function getPostData($slug)
     {
-        $postRepo = $orm->getRepository(Post::class);
-        $slug = $request->getAttribute('slug', null);
-
+        $postRepo = $this->getORM()->getRepository(Post::class);
         $item = $postRepo->fullPostPage($slug);
-        if ($item === null) {
-            return $this->responseFactory->createResponse(404);
-        }
-
-        return $this->render('index', ['item' => $item]);
+        
+        return $item;
     }
-    public function getTagData()
+    public function getTagData($label, $pageNum)
     {
-        /** @var TagRepository $tagRepo */
-        $tagRepo = $orm->getRepository(Tag::class);
-        /** @var PostRepository $postRepo */
-        $postRepo = $orm->getRepository(Post::class);
-        $label = $request->getAttribute('label', null);
-        $pageNum = (int)$request->getAttribute('page', 1);
-
-        $item = $tagRepo->findByLabel($label);
-
+        $data = [
+            'item' => null,
+            'paginator' => null,
+        ];
+        
+        $item = $this->getORM()->getRepository(Tag::class)->findByLabel($label);
         if ($item === null) {
-            return $this->responseFactory->createResponse(404);
+            return $data;
         }
+
+        /** @var PostRepository $postRepo */
+        $postRepo = $this->getORM()->getRepository(Post::class);
         // preloading of posts
         $paginator = (new OffsetPaginator($postRepo->findByTag($item->getId())))
             ->withPageSize(self::POSTS_PER_PAGE)
@@ -74,42 +69,35 @@ class BlogService extends BaseService
             'item' => $item,
             'paginator' => $paginator,
         ];
-        return $this->render('index', $data);
+        return $data;
     }
     public function getArchiveData()
     {
-                return $this->render('index', ['archive' => $archiveRepo->getFullArchive()]);
-
+        return $this->getObject(ArchiveRepository::class)->getFullArchive();
     }
-    public function getArchiveDataMonthly()
+    public function getArchiveDataMonthly($year,$month,$pageNum)
     {
-        /** @var TagRepository $postRepo */
-        $tagRepo = $orm->getRepository(Tag::class);
-
-        $pageNum = (int)$request->getAttribute('page', 1);
-        $year = $request->getAttribute('year', null);
-        $month = $request->getAttribute('month', null);
-
+        $archiveRepo=$this->getObject(ArchiveRepository::class);
         $dataReader = $archiveRepo->getMonthlyArchive($year, $month);
+        
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(self::POSTS_PER_PAGE)
             ->withCurrentPage($pageNum);
+            
+        $archive = $archiveRepo->getFullArchive()->withLimit(12);
+        $tags = $this->getORM()->getRepository(Tag::class)->getTagMentions(self::POPULAR_TAGS_COUNT);
+        
         $data = [
             'year' => $year,
             'month' => $month,
             'paginator' => $paginator,
-            'archive' => $archiveRepo->getFullArchive()->withLimit(12),
-            'tags' => $tagRepo->getTagMentions(self::POPULAR_TAGS_COUNT),
+            'archive' => $archive,
+            'tags' => $tags,
         ];
+        return $data;
     }
     public function getArchiveDataYearly($year)
     {
-        $year = $request->getAttribute('year', null);
-
-        $data = [
-            'year' => $year,
-            'items' => $archiveRepo->getYearlyArchive($year),
-        ];
-        return $data;
+        return  $this->getObject(ArchiveRepository::class)->getYearlyArchive($year);
     }
 }

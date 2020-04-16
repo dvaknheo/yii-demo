@@ -20,6 +20,7 @@ class App extends DuckPhp_App
         $controller = blog::class;
 
         $this->options['route_map']=[
+            /*
             '/xblog'                                                             =>"$controller@index",
             '/xblog'                                                             =>"$controller@index",
             '~^blog(/(?<id>\d+))$'                                               =>"$controller@index",
@@ -28,6 +29,7 @@ class App extends DuckPhp_App
             '/blog/archive'                                                     =>"$controller@archive",
             '^blog/archive/(?<year>\d+)$'                                       =>"$controller@archive_yearly",
             '~^blog/archive/(?<year>\d+)-(?<month>\d+)(/page(?<page>\d+))?$'     =>"$controller@archive_monthly",
+            //*/
         ];
         $ret = parent::onInit();
         BaseView::G()->init($this->options);
