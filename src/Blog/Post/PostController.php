@@ -14,7 +14,7 @@ final class PostController extends Controller
         return 'blog/post';
     }
 
-    public function index(Request $request, ORMInterface $orm): Response
+    public function index(Request $request): Response
     {
         $slug = $request->getAttribute('slug', null);
 
