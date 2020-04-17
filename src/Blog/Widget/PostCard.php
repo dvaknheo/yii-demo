@@ -17,11 +17,14 @@ class PostCard extends Widget
 
     private UrlGeneratorInterface $urlGenerator;
 
+    protected $data=[];
+
     public function __construct(UrlGeneratorInterface $urlGenerator)
     {
         $this->urlGenerator = $urlGenerator;
     }
 
+    //override
     protected function run(): string
     {
         if (!isset($this->options['id'])) {
@@ -31,6 +34,26 @@ class PostCard extends Widget
         $this->initOptions();
 
         $this->registerPlugin('page-card', $this->options);
+
+
+$template=<<<'EOT'
+<div id="w0-post-card" class="card mb-4" data-post-slug="{slug}">
+<div class="card-body d-flex flex-column align-items-start">
+<a class="mb-0 h4 text-decoration-none" href="{url_post}">{title}</a>
+<div class="mb-1 text-muted">{publishAt}by <a href="{url_user}">{userLogin}</a></div><p class="card-text mb-auto">{content_short}</p>
+<div class="mt-3">
+[[
+<a class="btn btn-outline-secondary btn-sm mx-1 mt-1" href="{url_tag_label}">{tag_label}</a>
+]]
+</div>
+
+</div>
+</div>
+
+EOT;
+'EOT';
+//return $template;
+
 
         return implode("\n", [
             Html::beginTag('div', $this->options),
@@ -90,14 +113,21 @@ class PostCard extends Widget
     public function post(?Post $post): self
     {
         $this->post = $post;
+        $this->data=[
+            'title'=>$post->getTitle(),
+            'slug'=>$post->getSlug(),
+            'publishedAt'=>$post->getPublishedAt()->format('M, d'),
+            'userLogin'=>$post->getUser()->getLogin(),
+            'content'=>$post->getContent(),
+            'getTags'=>$post->getTags(),
+        ];
 
         if ($post !== null) {
-            $this->options['data']['post-slug'] = $post->getSlug();
+            $this->options['data']['post-slug'] = $post->getSlug(); //$post->getSlug();
         }
 
         return $this;
     }
-
     /**
      * The HTML attributes for the widget container tag. The following special options are recognized.
      *
