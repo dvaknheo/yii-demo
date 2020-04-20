@@ -37,41 +37,21 @@ class AuthController extends Controller
         return 'auth';
     }
 
-    public function login(
-        ServerRequestInterface $request,
-        IdentityRepositoryInterface $identityRepository
-    ): ResponseInterface {
+    public function login(ServerRequestInterface $request): ResponseInterface 
+    {
         $body = $request->getParsedBody();
         $error = null;
 
         if ($request->getMethod() === Method::POST) {
             try {
-                foreach (['login', 'password'] as $name) {
-                    if (empty($body[$name])) {
-                        throw new \InvalidArgumentException(ucfirst($name) . ' is required');
-                    }
-                }
-
-                /** @var \App\Entity\User $identity */
-                $identity = $identityRepository->findByLogin($body['login']);
-                if ($identity === null) {
-                    throw new \InvalidArgumentException('No such user');
-                }
-
-                if (!$identity->validatePassword($body['password'])) {
-                    throw new \InvalidArgumentException('Invalid password');
-                }
-
-                if ($this->user->login($identity)) {
-                    return $this->responseFactory
-                        ->createResponse(302)
-                        ->withHeader(
-                            'Location',
-                            $this->urlGenerator->generate('site/index')
-                        );
-                }
-
-                throw new \InvalidArgumentException('Unable to login');
+                UserService::G()->login($body);
+                
+                return $this->responseFactory
+                    ->createResponse(302)
+                    ->withHeader(
+                        'Location',
+                        $this->urlGenerator->generate('site/index')
+                    );
             } catch (\Throwable $e) {
                 $this->logger->error($e);
                 $error = $e->getMessage();
@@ -90,8 +70,8 @@ class AuthController extends Controller
 
     public function logout(): ResponseInterface
     {
-        $this->user->logout();
-
+        UserService::G()->logout();
+        
         return $this->responseFactory
             ->createResponse(302)
             ->withHeader(

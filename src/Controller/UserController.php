@@ -20,31 +20,20 @@ class UserController extends Controller
         return 'user';
     }
 
-    public function index(Request $request, ORMInterface $orm): Response
+    public function index(Request $request): Response
     {
         $pageNum = (int)$request->getAttribute('page', 1);
-        /** @var UserRepository $userRepo */
-        $userRepo = $orm->getRepository(User::class);
-
-        $dataReader = $userRepo->findAll()->withSort((new Sort([]))->withOrderString('login'));
-        $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(self::PAGINATION_INDEX)
-            ->withCurrentPage($pageNum);
-
+        $paginator = UserService::G()->listByPage($pageNum);
         return $this->render('index', ['paginator' => $paginator]);
     }
 
-    public function profile(Request $request, ORMInterface $orm): Response
+    public function profile(Request $request): Response
     {
-        /** @var UserRepository $userRepo */
-        $userRepo = $orm->getRepository(User::class);
         $login = $request->getAttribute('login', null);
-
-        $item = $userRepo->findByLogin($login);
+        $item =  UserService::G()->profile($login);
         if ($item === null) {
             return $this->responseFactory->createResponse(404);
         }
-
         return $this->render('profile', ['item' => $item]);
     }
 }

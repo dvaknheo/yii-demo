@@ -28,24 +28,8 @@ final class SignupController extends Controller
 
         if ($request->getMethod() === Method::POST) {
             try {
-                foreach (['login', 'password'] as $name) {
-                    if (empty($body[$name])) {
-                        throw new \InvalidArgumentException(ucfirst($name) . ' is required.');
-                    }
-                }
-
-                /** @var \App\Entity\User $identity */
-                $identity = $identityRepository->findByLogin($body['login']);
-                if ($identity !== null) {
-                    throw new \InvalidArgumentException('Unable to register user with such username.');
-                }
-
-                $user = new User($body['login'], $body['password']);
-
-                $transaction = new Transaction($orm);
-                $transaction->persist($user);
-
-                $transaction->run();
+                UserService::G()->signup($body);
+                
                 return $this->responseFactory
                     ->createResponse(302)
                     ->withHeader(

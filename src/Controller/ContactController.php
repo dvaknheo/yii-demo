@@ -52,37 +52,16 @@ class ContactController extends Controller
             $error = '';
 
             try {
-                foreach (['subject', 'name', 'email', 'content'] as $name) {
-                    if (empty($body[$name])) {
-                        throw new \InvalidArgumentException(ucfirst($name) . ' is required');
-                    }
-                }
-                $message = $this->mailer->compose(
-                    'contact',
-                    [
-                        'name' => $body['name'],
-                        'email' => $body['email'],
-                        'content' => $body['content'],
-                    ]
-                )
-                    ->setSubject($body['subject'])
-                    ->setTo($this->parameters->get('supportEmail'))
-                    ->setFrom($this->parameters->get('mailer.username'));
-
-                /** @var UploadedFileInterface[] $files */
                 $files = $request->getUploadedFiles();
+
                 if (!empty($files['file']) && $files['file']->getError() === UPLOAD_ERR_OK) {
                     $file = $files['file'];
-                    $message->attachContent(
-                        (string)$file->getStream(),
-                        [
-                            'fileName' => $file->getClientFilename(),
-                            'contentType' => $file->getClientMediaType(),
-                        ]
-                    );
+                }else{
+                    $file=null;
                 }
-
-                $message->send();
+                $to = $this->parameters->get('supportEmail');
+                $from = $this->parameters->get('mailer.username');
+                UserService::G()->sendMail($body, $file,$to,$from);
                 $sent = true;
             } catch (\Throwable $e) {
                 $this->logger->error($e);
