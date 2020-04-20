@@ -30,40 +30,42 @@ abstract class Controller implements ViewContextInterface
         $this->view = $view;
         $this->layout = $aliases->get('@views') . '/layout/main';
     }
-
+    //@override
+    public function getViewPath(): string
+    {
+        return $this->aliases->get('@views') . '/' . $this->getId();
+    }
+    
     protected function render(string $view, array $parameters = []): ResponseInterface
     {
         $controller = $this;
         $contentRenderer = static function () use ($view, $parameters, $controller) {
-            return $controller->renderContent($controller->view->render($view, $parameters, $controller));
+            return $controller->renderClosure($view, $parameters);
         };
 
         return $this->responseFactory->createResponse($contentRenderer);
     }
 
-    private function renderContent($content): string
+    private function renderClosure($view, $parameters): string
     {
+        $content = $this->view->render($view, $parameters, $this);
         $user = $this->user->getIdentity();
-
         $layout = $this->findLayoutFile($this->layout);
-        if ($layout !== null) {
-            return $this->view->renderFile(
-                $layout,
-                [
-                    'content' => $content,
-                    'user' => $user,
-                ],
-                $this
-            );
+        
+        if ($layout === null) {
+            $content;
         }
-
-        return $content;
+        return $this->view->renderFile(
+            $layout,
+            [
+                'content' => $content,
+                'user' => $user,
+            ],
+            $this
+        );
     }
 
-    public function getViewPath(): string
-    {
-        return $this->aliases->get('@views') . '/' . $this->getId();
-    }
+
 
     private function findLayoutFile(?string $file): ?string
     {
