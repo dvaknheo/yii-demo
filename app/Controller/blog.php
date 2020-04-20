@@ -35,7 +35,7 @@ class blog
         var_dump(C::getRouteCallingMethod());
         var_dump(DATE(DATE_ATOM));
     }
-    public function archive_bad()
+    public function archive()
     {
         C::Exit404(false);
         return;

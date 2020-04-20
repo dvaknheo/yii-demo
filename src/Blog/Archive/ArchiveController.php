@@ -23,7 +23,7 @@ final class ArchiveController extends Controller
         return $this->render('index', ['archive' => $archive]);
     }
 
-    public function monthlyArchive(): Response
+    public function monthlyArchive(Request $request): Response
     {
         $pageNum = (int)$request->getAttribute('page', 1);
         $year = (int)$request->getAttribute('year', null);
@@ -34,7 +34,7 @@ final class ArchiveController extends Controller
         return $this->render('monthly-archive', $data);
     }
 
-    public function yearlyArchive(): Response
+    public function yearlyArchive(Request $request): Response
     {
         $year = $request->getAttribute('year', null);
         $items = BlogService::G()->getArchiveDataYearly((int)$year);

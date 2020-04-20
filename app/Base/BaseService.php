@@ -16,8 +16,8 @@ class BaseService
     
     public function getORM()
     {
-        global $container;
-        global $promise;
+        $container=App::G()->container;
+        $promise=App::G()->promise;
         if(!empty($promise)){
             return $promise->getORM();
         }
@@ -25,7 +25,7 @@ class BaseService
     }
     public function getObject($class)
     {
-        global $container;
+        $container=App::G()->container;
         return $container->get($class);
     }
 }

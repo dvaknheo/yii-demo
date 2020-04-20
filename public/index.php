@@ -10,7 +10,6 @@ use Yiisoft\Yii\Web\ServerRequestFactory;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-global $container;  // got it;
 
 // Don't do it in production, assembling takes it's time
 Builder::rebuild(__DIR__);
@@ -41,6 +40,7 @@ $options['skip_exception_check'] = true;
 //$options['handle_all_exception'] = false;
 
 $options['is_debug'] = true;                  // @DUCKPHP_DELETE
+$options['container'] = $container;
 
 \DuckPhp\App::G()->init($options);
 

@@ -15,13 +15,17 @@ use MY\Controller\blog;
 
 class App extends DuckPhp_App
 {
+    public $container;
+    public $promise;
     public function onInit()
     {
+        $this->container=$this->options['container']??null;
+        $this->promise=$this->options['promise']??null;
+        
         $controller = blog::class;
 
         $this->options['route_map']=[
             /*
-            '/xblog'                                                             =>"$controller@index",
             '/xblog'                                                             =>"$controller@index",
             '~^blog(/(?<id>\d+))$'                                               =>"$controller@index",
             '~^blog/page/(?<slug>\w+)$'                                          =>"$controller@post",

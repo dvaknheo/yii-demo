@@ -24,12 +24,8 @@ class CreateCommand extends Command
         parent::__construct();
         $this->doInit($promise);
     }
-    protected function doInit($input_promise)
+    protected function doInit($promise)
     {
-        global $promise;
-        
-        $promise = $input_promise;
-        
         $path = realpath(__DIR__.'/../../..');
         $options=[];
         $options['path'] = $path;
@@ -38,7 +34,8 @@ class CreateCommand extends Command
         $options['skip_exception_check'] = true;
         $options['handle_all_exception'] = false;
         $options['is_debug'] = true;
-        
+        $options['promise'] = $promise;
+
         App::G()->init($options);
     }
 

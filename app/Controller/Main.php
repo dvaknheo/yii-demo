@@ -10,8 +10,13 @@ use MY\Service\TestService;
 
 class Main
 {
+    public function __construct()
+    {
+        C::setViewWrapper('layout/head','layout/foot');
+    }
     public function test()
     {
         C::Show(get_defined_vars(),'site/index');
     }
+
 }

@@ -12,7 +12,7 @@ class BaseView extends View
     public function __construct()
     {
         parent::__construct();
-        $this->options['path_view']='views';
+        $this->options['path_view']='view';
     }
     public function _Show($data = [], $view)
     {
