@@ -26,12 +26,10 @@ class FixtureService extends BaseService
     /** @var Tag[] */
     private array $tags = [];
 
-    private const DEFAULT_COUNT = 10;
     
     public function run($count)
     {
         $this->faker = Factory::create();
-
         $this->addUsers($count);
         $this->addTags($count);
         $this->addPosts($count);
