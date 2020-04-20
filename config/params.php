@@ -63,6 +63,8 @@ return [
         ],
         // 'promiseFactory' => \Cycle\ORM\Promise\ProxyFactory::class,
         //'queryLogger' => \Yiisoft\Yii\Cycle\Logger\StdoutQueryLogger::class,
+        'queryLogger' => \App\Factory\LoggerFactory::class,
+
     ],
     // cycle migration config
     'cycle.migrations' => [
