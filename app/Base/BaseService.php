@@ -17,6 +17,10 @@ class BaseService
     public function getORM()
     {
         global $container;
+        global $promise;
+        if(!empty($promise)){
+            return $promise->getORM();
+        }
         return $container->get(ORMInterface::class);
     }
     public function getObject($class)

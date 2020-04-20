@@ -22,6 +22,24 @@ class CreateCommand extends Command
     {
         $this->promise = $promise;
         parent::__construct();
+        $this->doInit($promise);
+    }
+    protected function doInit($input_promise)
+    {
+        global $promise;
+        
+        $promise = $input_promise;
+        
+        $path = realpath(__DIR__.'/../../..');
+        $options=[];
+        $options['path'] = $path;
+        $options['skip_setting_file'] = true;
+        $options['skip_404_handler'] = true;
+        $options['skip_exception_check'] = true;
+        $options['handle_all_exception'] = false;
+        $options['is_debug'] = true;
+        
+        App::G()->init($options);
     }
 
     public function configure(): void
@@ -39,12 +57,8 @@ class CreateCommand extends Command
 
         $login = $input->getArgument('login');
         $password = $input->getArgument('password');
-
-        $user = new User($login, $password);
         try {
-            $transaction = new Transaction($this->promise->getORM());
-            $transaction->persist($user);
-            $transaction->run();
+            UserService::G()->create($login, $password);
             $io->success('User created');
         } catch (\Throwable $t) {
             $io->error($t->getMessage());

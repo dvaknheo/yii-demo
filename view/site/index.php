@@ -1,6 +1,7 @@
 <?php
 
 use Yiisoft\Yii\Bootstrap4\Carousel;
+$binPath = strtr('./vendor/bin/yii', '/', DIRECTORY_SEPARATOR);
 
 echo Carousel::widget()
     ->items([
@@ -24,11 +25,11 @@ echo Carousel::widget()
 
 
 
+
 <div class="card mt-3 col-md-6">
     <div class="card-body">
         <h2 class="card-title">Console</h2>
-        <?php $binPath = strtr('./vendor/bin/yii', '/', DIRECTORY_SEPARATOR); ?>
-        <h4 class="card-title text-muted">Create new user</h4>
+                <h4 class="card-title text-muted">Create new user</h4>
         <div>
             <code><?php echo "{$binPath} user/create &lt;login&gt; &lt;password&gt;" ?></code>
         </div>

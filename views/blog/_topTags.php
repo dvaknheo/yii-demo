@@ -7,6 +7,7 @@
  */
 
 use Yiisoft\Html\Html;
+use MY\Base\Helper\AppHelper as A;
 
 ?>
 <h4 class="text-muted mb-3">
@@ -14,6 +15,7 @@ use Yiisoft\Html\Html;
 </h4>
 <ul class="list-group mb-3">
     <?php
+A::OBStart();
     $blockBegin = Html::beginTag(
     'li',
     ['class' => 'list-group-item d-flex flex-column justify-content-between lh-condensed']
@@ -37,5 +39,7 @@ use Yiisoft\Html\Html;
         echo 'tags not found';
     }
     echo $blockEnd;
+A::OBEnd(__FILE__);
+
     ?>
 </ul>

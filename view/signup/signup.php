@@ -21,18 +21,10 @@ $error = $error ?? null;
   <input type="hidden" name="_csrf" value="<?= $csrf ?>">
   <div class="form-group">
     <label for="subject">Login</label>
-      <?= Html::textInput('login', $body['login'] ?? '', [
-          'class' => 'form-control',
-          'required' => true,
-      ]) ?>
-  </div>
+      <input type="text" class="form-control" name="login" value="" required>  </div>
   <div class="form-group">
     <label for="email">Password</label>
-      <?= Html::passwordInput('password', $body['password'] ?? '', [
-        'class' => 'form-control',
-        'required' => true,
-    ]) ?>
-  </div>
+      <input type="password" class="form-control" name="password" value="" required>  </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 

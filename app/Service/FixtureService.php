@@ -1,28 +1,25 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * DuckPHP
+ * From this time, you never be alone~
+ */
 
-namespace App\Command\Fixture;
+namespace MY\Service;
+
+use MY\Base\BaseService;
+use MY\Base\Helper\ServiceHelper as S;
 
 use App\Blog\Entity\Comment;
 use App\Blog\Entity\Post;
 use App\Blog\Entity\Tag;
 use App\Entity\User;
-use App\Blog\Tag\TagRepository;
 use Cycle\ORM\Transaction;
 use Faker\Factory;
 use Faker\Generator;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Yiisoft\Yii\Console\ExitCode;
-use Yiisoft\Yii\Cycle\Command\CycleDependencyPromise;
 
-class AddCommand extends Command
+
+class FixtureService extends BaseService
 {
-    protected static $defaultName = 'fixture/add';
-
-    private CycleDependencyPromise $promise;
     private Generator $faker;
     /** @var User[] */
     private array $users = [];
@@ -30,68 +27,20 @@ class AddCommand extends Command
     private array $tags = [];
 
     private const DEFAULT_COUNT = 10;
-
-    public function __construct(CycleDependencyPromise $promise)
+    
+    public function run($count)
     {
-        $this->promise = $promise;
-        parent::__construct();
-        $this->doInit($promise);
-    }
-    protected function doInit($input_promise)
-    {
-        global $promise;
-        
-        $promise = $input_promise;
-        
-        $path = realpath(__DIR__.'/../../..');
-        $options=[];
-        $options['path'] = $path;
-        $options['skip_setting_file'] = true;
-        $options['skip_404_handler'] = true;
-        $options['skip_exception_check'] = true;
-        $options['handle_all_exception'] = false;
-        $options['is_debug'] = true;
-        
-        App::G()->init($options);
-    }
-
-    public function configure(): void
-    {
-        $this
-            ->setDescription('Add fixtures')
-            ->setHelp('This command adds random content')
-            ->addArgument('count', InputArgument::OPTIONAL, 'Count', self::DEFAULT_COUNT);
-    }
-
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $io = new SymfonyStyle($input, $output);
-
-        $count = (int)$input->getArgument('count');
-        // get faker
-        if (!class_exists(Factory::class)) {
-            $io->error('Faker should be installed. Run `composer install --dev`');
-            return ExitCode::UNSPECIFIED_ERROR;
-        }
         $this->faker = Factory::create();
 
-        try {
-            $this->addUsers($count);
-            $this->addTags($count);
-            $this->addPosts($count);
+        $this->addUsers($count);
+        $this->addTags($count);
+        $this->addPosts($count);
 
-            $this->saveEntities();
-        } catch (\Throwable $t) {
-            $io->error($t->getMessage());
-            return $t->getCode() ?: ExitCode::UNSPECIFIED_ERROR;
-        }
-        $io->success('Done');
-        return ExitCode::OK;
+        $this->saveEntities();
     }
-
     private function saveEntities(): void
     {
-        $transaction = new Transaction($this->promise->getORM());
+        $transaction = new Transaction($this->getORM());
         foreach ($this->users as $user) {
             $transaction->persist($user);
         }
@@ -110,7 +59,7 @@ class AddCommand extends Command
     private function addTags(int $count): void
     {
         /** @var TagRepository $tagRepository */
-        $tagRepository = $this->promise->getORM()->getRepository(Tag::class);
+        $tagRepository = $this->getORM()->getRepository(Tag::class);
         $this->tags = [];
         $tagWords = [];
         for ($i = 0, $fails = 0; $i <= $count; ++$i) {
