@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
  * @var $urlGenerator \Yiisoft\Router\UrlGeneratorInterface
  * @var $csrf string
  */
-$url_login = $urlGenerator->generate('site/login');
+$url_login = V::URL('site/login');
 $error = $error ?? null;
 ?>
 

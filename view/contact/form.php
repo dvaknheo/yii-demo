@@ -22,7 +22,7 @@ if (isset($sent)) {
 ?>
 <form id="contactForm"
       method="POST"
-      action="<?= $urlGenerator->generate('site/contact') ?>"
+      action="<?= V::URL('site/contact') ?>"
       enctype="multipart/form-data"
 >
     <input type="hidden" name="_csrf" value="<?= $csrf ?>">

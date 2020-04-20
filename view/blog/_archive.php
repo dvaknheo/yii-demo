@@ -32,7 +32,7 @@ use Yiisoft\Html\Html;
             // Print month name
             echo Html::a(
                 Date('F', mktime(0, 0, 0, (int)$month, 1, (int)$year)),
-                $urlGenerator->generate('blog/archive/month', [
+                V::URL('blog/archive/month', [
                     'year' => $year,
                     'month' => $month,
                 ]),
@@ -41,7 +41,7 @@ use Yiisoft\Html\Html;
             echo Html::endTag('div');
             $currentYear = $year;
         }
-        echo Html::a('Open archive', $urlGenerator->generate('blog/archive/index'), ['class' => 'mt-2']);
+        echo Html::a('Open archive', V::URL('blog/archive/index'), ['class' => 'mt-2']);
         echo $blockEnd;
     } else {
         echo $blockBegin, 'No records', $blockEnd;

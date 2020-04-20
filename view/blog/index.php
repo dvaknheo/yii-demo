@@ -15,7 +15,7 @@ use Yiisoft\Html\Html;
 
 $pagination = OffsetPagination::widget()
                               ->paginator($paginator)
-                              ->urlGenerator(fn ($page) => $urlGenerator->generate('blog/index', ['page' => $page]));
+                              ->urlGenerator(fn ($page) => V::URL('blog/index', ['page' => $page]));
 ?>
 <h1>Blog</h1>
 <div class="row">

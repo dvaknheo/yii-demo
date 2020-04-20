@@ -29,7 +29,7 @@ use Yiisoft\Html\Html;
                     // print Year
                     echo $sectionBegin, Html::a(
                         $year,
-                        $urlGenerator->generate('blog/archive/year', ['year' => $year]),
+                        V::URL('blog/archive/year', ['year' => $year]),
                         ['class' => 'h5']
                     ), Html::beginTag(
                         'div',
@@ -40,7 +40,7 @@ use Yiisoft\Html\Html;
                 // Print month name
                 echo Html::a(
                     Date('F', mktime(0, 0, 0, (int)$month, 1, (int)$year)),
-                    $urlGenerator->generate('blog/archive/month', [
+                    V::URL('blog/archive/month', [
                         'year' => $year,
                         'month' => $month,
                     ]),

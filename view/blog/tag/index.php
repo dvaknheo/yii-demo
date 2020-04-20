@@ -12,7 +12,7 @@ use Yiisoft\Html\Html;
 
 $pagination = OffsetPagination::widget()
                               ->paginator($paginator)
-                              ->urlGenerator(fn ($page) => $urlGenerator->generate(
+                              ->urlGenerator(fn ($page) => V::URL(
                                   'blog/tag',
                                   ['label' => $item->getLabel(), 'page' => $page]
                               ));
@@ -21,10 +21,10 @@ echo Html::beginTag('ul');
 /** @var \App\Blog\Entity\Post $post */
 foreach ($paginator->read() as $post) {
     echo Html::beginTag('li', ['class' => 'text-muted']);
-    echo Html::a(Html::encode($post->getTitle()), $urlGenerator->generate('blog/post', ['slug' => $post->getSlug()]));
+    echo Html::a(Html::encode($post->getTitle()), V::URL('blog/post', ['slug' => $post->getSlug()]));
     echo ' by ';
     $userLogin = $post->getUser()->getLogin();
-    echo Html::a(Html::encode($userLogin), $urlGenerator->generate('user/profile', ['login' => $userLogin]));
+    echo Html::a(Html::encode($userLogin), V::URL('user/profile', ['login' => $userLogin]));
     echo ' at ';
     echo Html::tag('span', $post->getPublishedAt()->format('H:i d.m.Y'));
     echo Html::endTag('li');

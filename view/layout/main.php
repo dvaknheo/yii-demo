@@ -37,7 +37,7 @@ $this->beginBody();
 
 echo NavBar::begin()
       ->brandLabel('Yii Demo')
-      ->brandUrl($urlGenerator->generate('site/index'))
+      ->brandUrl(V::URL('site/index'))
       ->options(['class' => 'navbar navbar-light bg-light navbar-expand-sm text-white'])
       ->start();
 echo Nav::widget()
@@ -45,9 +45,9 @@ echo Nav::widget()
         ->options(['class' => 'navbar-nav mr-auto'])
         ->items(
             [
-                ['label' => 'Blog', 'url' => $urlGenerator->generate('blog/index')],
-                ['label' => 'Users', 'url' => $urlGenerator->generate('user/index')],
-                ['label' => 'Contact', 'url' => $urlGenerator->generate('site/contact')],
+                ['label' => 'Blog', 'url' => V::URL('blog/index')],
+                ['label' => 'Users', 'url' => V::URL('user/index')],
+                ['label' => 'Contact', 'url' => V::URL('site/contact')],
             ]
         );
 echo Nav::widget()
@@ -56,10 +56,10 @@ echo Nav::widget()
         ->items(
             $user->getId() === null
                 ? [
-                ['label' => 'Login', 'url' => $urlGenerator->generate('site/login')],
-                ['label' => 'Signup', 'url' => $urlGenerator->generate('site/signup')],
+                ['label' => 'Login', 'url' => V::URL('site/login')],
+                ['label' => 'Signup', 'url' => V::URL('site/signup')],
             ]
-                : [['label' => "Logout ({$user->getLogin()})", 'url' => $urlGenerator->generate('site/logout')]],
+                : [['label' => "Logout ({$user->getLogin()})", 'url' => V::URL('site/logout')]],
         );
 echo NavBar::end();
 

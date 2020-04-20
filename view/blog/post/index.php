@@ -15,7 +15,7 @@ use Yiisoft\Html\Html;
     <?php
     echo Html::a(
     Html::encode($item->getUser()->getLogin()),
-    $urlGenerator->generate('user/profile', ['login' => $item->getUser()->getLogin()])
+    V::URL('user/profile', ['login' => $item->getUser()->getLogin()])
 );
     ?>
 </div>
@@ -28,7 +28,7 @@ if ($item->getTags()->count()) {
     foreach ($item->getTags() as $tag) {
         echo Html::a(
             Html::encode($tag->getLabel()),
-            $urlGenerator->generate('blog/tag', ['label' => $tag->getLabel()]),
+            V::URL('blog/tag', ['label' => $tag->getLabel()]),
             ['class' => 'btn btn-outline-secondary btn-sm m-1']
         );
     }
@@ -45,7 +45,7 @@ if ($item->getComments()->count()) {
                 <div>
                     <?php echo Html::a(
             Html::encode($comment->getUser()->getLogin()),
-            $urlGenerator->generate('user/profile', ['login' => $comment->getUser()->getLogin()])
+            V::URL('user/profile', ['login' => $comment->getUser()->getLogin()])
         ) ?>
                     <span class="text-muted">
                         <i>created at</i> <?php echo $comment->getCreatedAt()->format('H:i d.m.Y') ?>

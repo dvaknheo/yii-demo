@@ -38,11 +38,11 @@ use Yiisoft\Html\Html;
             echo Html::beginTag('div');
             echo Html::a(
                 Html::encode($item->getTitle()),
-                $urlGenerator->generate('blog/post', ['slug' => $item->getSlug()])
+                V::URL('blog/post', ['slug' => $item->getSlug()])
             );
             echo ' by ';
             $login = $item->getUser()->getLogin();
-            echo Html::a(Html::encode($login), $urlGenerator->generate(
+            echo Html::a(Html::encode($login), V::URL(
                 'user/profile',
                 ['login' => $login]
             ));

@@ -28,7 +28,7 @@ use Yiisoft\Html\Html;
             echo Html::beginTag('div', ['class' => 'd-flex justify-content-between align-items-center']);
             echo Html::a(
                 Html::encode($label),
-                $urlGenerator->generate('blog/tag', ['label' => $label]),
+                V::URL('blog/tag', ['label' => $label]),
                 ['class' => 'text-muted overflow-hidden']
             ), ' ', Html::tag('span', $count, ['class' => 'badge badge-secondary badge-pill']);
             echo Html::endTag('div');
