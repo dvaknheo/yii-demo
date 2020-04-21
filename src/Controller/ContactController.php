@@ -12,8 +12,9 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Http\Method;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\Web\User\User;
 use Yiisoft\Yii\Web\Data\DataResponseFactoryInterface;
+
+use MY\Service\UserService;
 
 class ContactController extends Controller
 {

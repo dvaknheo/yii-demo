@@ -3,17 +3,11 @@
 namespace App\Controller;
 
 use App\Controller;
-use App\Entity\User;
-use App\Repository\UserRepository;
-use Cycle\ORM\ORMInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Data\Reader\Sort;
 
 class UserController extends Controller
 {
-    private const PAGINATION_INDEX = 5;
 
     protected function getId(): string
     {

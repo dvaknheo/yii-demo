@@ -2,12 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
 use Cycle\ORM\ORMInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Yii\Web\Data\DataResponseFactoryInterface;
 
 use MY\Service\UserService;

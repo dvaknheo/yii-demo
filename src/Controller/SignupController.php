@@ -4,7 +4,6 @@
 namespace App\Controller;
 
 use App\Controller;
-use App\Entity\User;
 use Cycle\ORM\ORMInterface;
 use Cycle\ORM\Transaction;
 use Psr\Http\Message\RequestInterface;
