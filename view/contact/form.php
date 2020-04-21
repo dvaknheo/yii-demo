@@ -16,7 +16,7 @@ if (isset($sent)) {
               ->body(
                   $sent
                       ? 'Thanks to contact us, we\'ll get in touch with you as soon as possible.'
-                      : Html::encode($error)
+                      : _h($error)
               );
 }
 ?>
@@ -29,22 +29,22 @@ if (isset($sent)) {
     <div class="form-group">
         <label for="subject">Subject</label>
         <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject"
-               value="<?= Html::encode($body['subject'] ?? '') ?>" required>
+               value="<?= _h($body['subject'] ?? '') ?>" required>
     </div>
     <div class="form-group">
         <label for="email">Email</label>
         <input type="email" class="form-control" name="email" id="email" placeholder="Email Address"
-               value="<?= Html::encode($body['email'] ?? '') ?>" required>
+               value="<?= _h($body['email'] ?? '') ?>" required>
     </div>
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" name="name" id="name" placeholder="Name"
-               value="<?= Html::encode($body['name'] ?? '') ?>" required>
+               value="<?= _h($body['name'] ?? '') ?>" required>
     </div>
     <div class="form-group">
         <label for="content">Content</label>
         <textarea class="form-control" name="content" id="content"
-                  placeholder="Content" required><?= Html::encode($body['content'] ?? '') ?></textarea>
+                  placeholder="Content" required><?= _h($body['content'] ?? '') ?></textarea>
     </div>
     <div class="form-group">
         <label>File</label>

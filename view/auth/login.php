@@ -11,11 +11,11 @@ $url_login = V::URL('site/login');
 $error = $error ?? null;
 ?>
 
-<?php if ($error !== null): ?>
+<?php if ($error !== null){ ?>
 <div class="alert alert-danger" role="alert">
-  <?= Html::encode($error) ?>
+  <?= _h($error) ?>
 </div>
-<?php endif ?>
+<?php } ?>
 
 <form id="loginForm" method="POST" action="<?= $url_login ?>" enctype="multipart/form-data">
   <input type="hidden" name="_csrf" value="<?= $csrf ?>">

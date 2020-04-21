@@ -1,16 +1,9 @@
 <?php
+
 use Yiisoft\Yii\Bootstrap4\Nav;
 use Yiisoft\Yii\Bootstrap4\NavBar;
-
 use MY\Base\Helper\ViewHelper as V;
-/**
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var \Yiisoft\View\WebView $this
- * @var \App\Entity\User $user
- * @var \Yiisoft\Assets\AssetManager $assetManager
- * @var string $content
- * @var null|string $currentUrl
- */
+
 $login="???";
 $user_id=null;
 $currentUrl="???";
