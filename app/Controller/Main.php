@@ -14,6 +14,10 @@ class Main
     {
         C::setViewWrapper('layout/head','layout/foot');
     }
+    public function index()
+    {
+        C::Exit404();
+    }
     public function test()
     {
         C::Show(get_defined_vars(),'site/index');

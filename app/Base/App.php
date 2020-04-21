@@ -7,6 +7,7 @@ namespace MY\Base;
 
 use DuckPhp\App as DuckPhp_App;
 use DuckPhp\Core\View;
+use DuckPhp\Core\Route;
 
 
 use MY\Base\Helper\ControllerHelper as C;
@@ -19,6 +20,8 @@ class App extends DuckPhp_App
     public $promise;
     public function onInit()
     {
+        Route::G(BaseRoute::G());
+        
         $this->container=$this->options['container']??null;
         $this->promise=$this->options['promise']??null;
         
