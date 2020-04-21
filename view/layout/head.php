@@ -2,6 +2,7 @@
 use Yiisoft\Yii\Bootstrap4\Nav;
 use Yiisoft\Yii\Bootstrap4\NavBar;
 
+use MY\Base\Helper\ViewHelper as V;
 /**
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var \Yiisoft\View\WebView $this
@@ -14,13 +15,6 @@ $login="???";
 $user_id=null;
 $currentUrl="???";
 
-class V
-{
-    public static function URL($url)
-    {
-        return $url;
-    }
-}
 ?><!DOCTYPE html>
 <html lang="">
 <head>
@@ -28,15 +22,13 @@ class V
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Yii Demo</title>
-    <?php //$this->head() ?>
-</head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"></head>
 <body>
 <?php
-//$this->beginBody();
-
+NavBar::counter(0);
 echo NavBar::begin()
       ->brandLabel('Yii Demo')
-      ->brandUrl(V::URL('site/index'))
+      ->brandUrl(V::URL('/'))
       ->options(['class' => 'navbar navbar-light bg-light navbar-expand-sm text-white'])
       ->start();
 echo Nav::widget()
@@ -44,9 +36,9 @@ echo Nav::widget()
         ->options(['class' => 'navbar-nav mr-auto'])
         ->items(
             [
-                ['label' => 'Blog', 'url' => V::URL('blog/index')],
-                ['label' => 'Users', 'url' => V::URL('user/index')],
-                ['label' => 'Contact', 'url' => V::URL('site/contact')],
+                ['label' => 'Blog', 'url' => V::URL('/blog')],
+                ['label' => 'Users', 'url' => V::URL('/user')],
+                ['label' => 'Contact', 'url' => V::URL('/contact')],
             ]
         );
 echo Nav::widget()
@@ -55,10 +47,10 @@ echo Nav::widget()
         ->items(
             $user_id === null
                 ? [
-                ['label' => 'Login', 'url' => V::URL('site/login')],
-                ['label' => 'Signup', 'url' => V::URL('site/signup')],
+                ['label' => 'Login', 'url' => V::URL('/login')],
+                ['label' => 'Signup', 'url' => V::URL('/signup')],
             ]
-                : [['label' => "Logout ({$login})", 'url' => V::URL('site/logout')]],
+                : [['label' => "Logout ({$login})", 'url' => V::URL('/logout')]],
         );
 echo NavBar::end();
 

@@ -2,7 +2,7 @@
 
 use Yiisoft\Yii\Bootstrap4\Carousel;
 $binPath = strtr('./vendor/bin/yii', '/', DIRECTORY_SEPARATOR);
-
+Carousel::counter(0);
 echo Carousel::widget()
     ->items([
         [
@@ -22,7 +22,6 @@ echo Carousel::widget()
         ],
     ]);
 ?>
-
 
 
 

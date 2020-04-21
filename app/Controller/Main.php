@@ -16,7 +16,11 @@ class Main
     }
     public function index()
     {
-        C::Exit404();
+        if(! C::GET('t')){
+            C::Exit404();
+            return;
+        }
+        C::Show(get_defined_vars(),'site/index');
     }
     public function test()
     {
