@@ -12,16 +12,42 @@ class Main
 {
     public function __construct()
     {
+        
         C::setViewWrapper('layout/head','layout/foot');
     }
-    public function index()
+    protected function auth()
     {
         if(! C::GET('t')){
             C::Exit404();
             return;
         }
+    }
+    public function index()
+    {
+        $this->auth();
         C::Show(get_defined_vars(),'site/index');
     }
+    public function contact()
+    {
+        $this->auth();
+        C::Show(get_defined_vars(),'site/contact');
+    }
+    public function login()
+    {
+        $this->auth();
+        C::Show(get_defined_vars(),'site/login');
+    }
+    public function logout()
+    {
+        $this->auth();
+        C::Show(get_defined_vars(),'site/logout');
+    }
+    public function signup()
+    {
+        $this->auth();
+        C::Show(get_defined_vars(),'site/signup');
+    }
+    
     public function test()
     {
         C::Show(get_defined_vars(),'site/index');

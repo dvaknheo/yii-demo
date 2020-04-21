@@ -18,18 +18,18 @@ class App extends DuckPhp_App
 {
     public $container;
     public $promise;
+    
     public function onInit()
     {
         Route::G(BaseRoute::G());
         
-        $this->container=$this->options['container']??null;
-        $this->promise=$this->options['promise']??null;
-        
         $controller = blog::class;
 
         $this->options['route_map']=[
+            '@/api/user/{login}' => "!api@index",
             /*
-            '/xblog'                                                             =>"$controller@index",
+            
+            '/blog'                                                             =>"$controller@index",
             '~^blog(/(?<id>\d+))$'                                               =>"$controller@index",
             '~^blog/page/(?<slug>\w+)$'                                          =>"$controller@post",
             '~^blog/tag/(?<label>\w+)(/page(?<page>\d+))?$'                       =>"$controller@tag",
@@ -38,12 +38,13 @@ class App extends DuckPhp_App
             '~^blog/archive/(?<year>\d+)-(?<month>\d+)(/page(?<page>\d+))?$'     =>"$controller@archive_monthly",
             //*/
         ];
+        // ! => 'namespace\controller. z'
+        
+        //inhert.
+        $this->container=$this->options['container']??null;
+        $this->promise=$this->options['promise']??null;
+        
         $ret = parent::onInit();
-        BaseView::G()->init($this->options);
-        View::G(BaseView::G());
-        
-        
-        
         
         return $ret;
     }
