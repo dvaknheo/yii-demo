@@ -2,12 +2,10 @@
 
 namespace App\Controller;
 
-use Cycle\ORM\ORMInterface;
+use App\Service\UserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Yii\Web\Data\DataResponseFactoryInterface;
-
-use App\Service\UserService;
 
 class ApiUserController
 {

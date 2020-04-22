@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Controller;
 use App\Parameters;
+use App\Service\UserService;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -13,8 +15,6 @@ use Yiisoft\Http\Method;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\Web\Data\DataResponseFactoryInterface;
-
-use App\Service\UserService;
 
 class ContactController extends Controller
 {
@@ -29,11 +29,12 @@ class ContactController extends Controller
         User $user,
         MailerInterface $mailer,
         LoggerInterface $logger,
-        Parameters $parameters
+        Parameters $parameters,
+        ContainerInterface $container
     ) {
         $this->mailer = $mailer;
         $this->logger = $logger;
-        parent::__construct($responseFactory, $user, $aliases, $view);
+        parent::__construct($responseFactory, $user, $aliases, $view, $container);
         $this->parameters = $parameters;
     }
 

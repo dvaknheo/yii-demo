@@ -3,10 +3,10 @@
 namespace App\Controller;
 
 use App\Controller;
+use App\Service\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-use App\Service\UserService;
 
 class UserController extends Controller
 {
@@ -30,6 +30,7 @@ class UserController extends Controller
         if ($item === null) {
             return $this->responseFactory->createResponse(404);
         }
+
         return $this->render('profile', ['item' => $item]);
     }
 }

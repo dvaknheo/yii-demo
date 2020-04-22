@@ -2,13 +2,13 @@
 
 namespace App;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\Web\User\User;
 use Yiisoft\Yii\Web\Data\DataResponseFactoryInterface;
-use Psr\Container\ContainerInterface;
 use App\Service\BaseService;
 
 abstract class Controller implements ViewContextInterface
@@ -35,12 +35,6 @@ abstract class Controller implements ViewContextInterface
 
         BaseService::G()->setContainer($container);
     }
-    //@override
-    public function getViewPath(): string
-    {
-        return $this->aliases->get('@views') . '/' . $this->getId();
-    }
-    
     protected function render(string $view, array $parameters = []): ResponseInterface
     {
         $controller = $this;
@@ -70,7 +64,10 @@ abstract class Controller implements ViewContextInterface
         );
     }
 
-
+    public function getViewPath(): string
+    {
+        return $this->aliases->get('@views') . '/' . $this->getId();
+    }
 
     private function findLayoutFile(?string $file): ?string
     {

@@ -6,7 +6,6 @@ use App\Controller;
 use App\Service\BlogService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Log\LoggerInterface;
 
 final class PostController extends Controller
 {
@@ -18,7 +17,6 @@ final class PostController extends Controller
     public function index(Request $request ,LoggerInterface $logger): Response
     {
         $slug = $request->getAttribute('slug', null);
-//$logger->error("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxx");
         $item = BlogService::G()->getPostData($slug);
         if ($item === null) {
             return $this->responseFactory->createResponse(404);

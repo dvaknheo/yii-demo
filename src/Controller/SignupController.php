@@ -4,12 +4,10 @@
 namespace App\Controller;
 
 use App\Controller;
-use Cycle\ORM\ORMInterface;
-use Cycle\ORM\Transaction;
+use App\Service\UserService;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use Yiisoft\Auth\IdentityRepositoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\UrlGeneratorInterface;
 

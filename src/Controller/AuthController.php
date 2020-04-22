@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Controller;
+use App\Service\UserService;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -11,8 +13,6 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\Web\Data\DataResponseFactoryInterface;
-
-use App\Service\UserService;
 
 class AuthController extends Controller
 {
@@ -25,11 +25,12 @@ class AuthController extends Controller
         WebView $view,
         User $user,
         LoggerInterface $logger,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        ContainerInterface $container
     ) {
         $this->logger = $logger;
         $this->urlGenerator = $urlGenerator;
-        parent::__construct($responseFactory, $user, $aliases, $view);
+        parent::__construct($responseFactory, $user, $aliases, $view, $container); //...
     }
 
     protected function getId(): string
