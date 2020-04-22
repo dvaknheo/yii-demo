@@ -16,6 +16,5 @@ class api
     public function user()
     {
         //$p=C::getParamge();
-        
     }
 }

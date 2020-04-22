@@ -26,29 +26,17 @@ require_once dirname(__DIR__) . '/src/globals.php';
 ////[[[[
 
 $path = realpath(__DIR__.'/..');
-$namespace = rtrim('MY\\', '\\');                    // @DUCKPHP_NAMESPACE
 $options=[];
 $options['path'] = $path;
-$options['namespace'] = $namespace;
-
-//$options['error_500'] = '_sys/error_500';
-//$options['error_debug'] = '_sys/error_debug';
-
-$options['skip_setting_file'] = true;
-$options['skip_404_handler'] = true;
-$options['skip_exception_check'] = true;
-//$options['handle_all_exception'] = false;
-
-$options['is_debug'] = true;                  // @DUCKPHP_DELETE
 $options['container'] = $container;
 
 \DuckPhp\App::G()->init($options);
 
-$flag=\DuckPhp\App::G()->run();
+$flag = \DuckPhp\App::G()->run();
 if($flag){
     return;
 }
-
+////]]]]
 
 
 $application = $container->get(Application::class);

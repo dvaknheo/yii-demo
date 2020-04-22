@@ -9,6 +9,7 @@ use DuckPhp\Core\Route;
 
 class BaseRoute extends Route
 {
+    //@override fixed parent bug
     public function run()
     {
         $flag = parent::run();

@@ -6,53 +6,75 @@
 namespace MY\Controller;
 
 use MY\Base\Helper\ControllerHelper as C;
-use MY\Service\TestService;
+use MY\Service\BlogService;
 
 class blog
 {
     public function __construct()
     {
-
+        C::Auth();
+    }
+    protected getAttribute($key,$default)
+    {
+        $data=C::getParameters();
+        return $data[$key]??$default;
     }
     public function index()
     {
-        //(?<id>\d+)
-
-        var_dump(DATE(DATE_ATOM));
+        $pageNum = (int)$this->getAttribute('page', 1);
         
-        //C::Show(get_defined_vars());
+        $data = BlogService::G()->getDataToIndex($pageNum);
+        
+        C::Show($data,'blog/index');
     }
     public function post()
     {
-        var_dump("!");
-        var_dump(C::getParameters());
-
-        var_dump(C::getRouteCallingMethod());
-        var_dump(DATE(DATE_ATOM));
+        $slug = $this->getAttribute('slug', null);
+        $item = BlogService::G()->getPostData($slug);
+        if ($item === null) {
+            C::Exit404();
+            return;
+        }
+        
+        C::Show(['item' => $item],'blog/post/index');
     }
     public function tag()
     {
-        var_dump(C::getRouteCallingMethod());
-        var_dump(DATE(DATE_ATOM));
+        $label = $this->getAttribute('label', null);
+        $pageNum = (int)$this->getAttribute('page', 1);
+        $data =  BlogService::G()->getTagData($label, $pageNum);
+        if ($data['item'] === null) {
+            C::Show404();
+            return;
+        }
+        
+        C::Show($data,'blog/tag/index');
     }
     public function archive()
     {
-        C::Exit404(false);
-        return;
-        var_dump(C::getRouteCallingMethod());
-        var_dump(DATE(DATE_ATOM));
+        $archive = BlogService::G()->getArchiveData();
+        
+        C::Show(['archive'=>$archive]),'blog/archive/index');
     }
     public function archive_yearly()
     {
-var_dump(C::getRouteCallingMethod());
-        var_dump(C::getParameters());
-        var_dump(C::getRouteCallingMethod());
-        var_dump(DATE(DATE_ATOM));
+        $year = $this->getAttribute('year', null);
+        $items = BlogService::G()->getArchiveDataYearly((int)$year);
+        $data = [
+            'year' => $year,
+            'items' => $items,
+        ];
+        
+        C::Show($data,'blog/archive/yearly-archive');
     }
     public function archive_monthly()
     {
-var_dump(C::getRouteCallingMethod());
-        var_dump(C::getParameters());
-var_dump(DATE(DATE_ATOM));
+        $pageNum = (int)$this->getAttribute('page', 1);
+        $year = (int)$this->getAttribute('year', null);
+        $month = (int)$this->getAttribute('month', null);
+        
+        $data = BlogService::G()->getArchiveDataMonthly($year,$month,$pageNum);
+        
+        C::Show($data,'blog/archive/monthly-archive');
     }
 }

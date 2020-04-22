@@ -6,9 +6,7 @@
 namespace MY\Base;
 
 use DuckPhp\App as DuckPhp_App;
-use DuckPhp\Core\View;
 use DuckPhp\Core\Route;
-
 
 use MY\Base\Helper\ControllerHelper as C;
 
@@ -18,7 +16,18 @@ class App extends DuckPhp_App
 {
     public $container;
     public $promise;
-    
+    public function __construct()
+    {
+        parent::__construct();
+        $this->options['skip_setting_file'] = true;
+        $this->options['skip_404_handler'] = true;
+        //$this->options['skip_exception_check'] = true;
+
+        $this->options['path_config'] = basename($this->options['path']).'/config';
+        //$this->options['path_view'] = basename($this->options['path']).'/view';
+        
+        $this->options['is_debug'] = true;
+    }
     public function onInit()
     {
         Route::G(BaseRoute::G());
@@ -52,5 +61,10 @@ class App extends DuckPhp_App
     {
         // your code here
         return parent::onRun();
+    }
+    public function run():bool
+    {
+        $flag=parent::run();
+        return $flag;
     }
 }

@@ -20,7 +20,7 @@ final class SignupController extends Controller
         return 'signup';
     }
 
-    public function signup(RequestInterface $request, IdentityRepositoryInterface $identityRepository, ORMInterface $orm, UrlGeneratorInterface $urlGenerator, LoggerInterface $logger): ResponseInterface
+    public function signup(RequestInterface $request,UrlGeneratorInterface $urlGenerator, LoggerInterface $logger): ResponseInterface
     {
         $body = $request->getParsedBody();
         $error = null;
