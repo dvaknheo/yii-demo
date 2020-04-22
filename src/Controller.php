@@ -37,9 +37,9 @@ abstract class Controller implements ViewContextInterface
     }
     protected function render(string $view, array $parameters = []): ResponseInterface
     {
-        $controller = $this;
-        $contentRenderer = static function () use ($view, $parameters, $controller) {
-            return $controller->renderProxy($view, $parameters);
+        $self = $this;
+        $contentRenderer = static function () use ($view, $parameters, $self) {
+            return $self->renderProxy($view, $parameters);
         };
 
         return $this->responseFactory->createResponse($contentRenderer);
@@ -52,7 +52,7 @@ abstract class Controller implements ViewContextInterface
         $layout = $this->findLayoutFile($this->layout);
         
         if ($layout === null) {
-            $content;
+            return $content;
         }
         return $this->view->renderFile(
             $layout,
