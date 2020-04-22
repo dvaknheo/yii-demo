@@ -39,13 +39,13 @@ abstract class Controller implements ViewContextInterface
     {
         $controller = $this;
         $contentRenderer = static function () use ($view, $parameters, $controller) {
-            return $controller->renderClosure($view, $parameters);
+            return $controller->renderProxy($view, $parameters);
         };
 
         return $this->responseFactory->createResponse($contentRenderer);
     }
 
-    private function renderClosure($view, $parameters): string
+    private function renderProxy($view, $parameters): string
     {
         $content = $this->view->render($view, $parameters, $this);
         $user = $this->user->getIdentity();
