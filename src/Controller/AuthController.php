@@ -12,7 +12,7 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\Web\Data\DataResponseFactoryInterface;
 
-use MY\Service\UserService;
+use App\Service\UserService;
 
 class AuthController extends Controller
 {

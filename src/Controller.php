@@ -8,6 +8,8 @@ use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\Web\User\User;
 use Yiisoft\Yii\Web\Data\DataResponseFactoryInterface;
+use Psr\Container\ContainerInterface;
+use App\Service\BaseService;
 
 abstract class Controller implements ViewContextInterface
 {
@@ -22,13 +24,16 @@ abstract class Controller implements ViewContextInterface
         DataResponseFactoryInterface $responseFactory,
         User $user,
         Aliases $aliases,
-        WebView $view
+        WebView $view,
+        ContainerInterface $container
     ) {
         $this->responseFactory = $responseFactory;
         $this->user = $user;
         $this->aliases = $aliases;
         $this->view = $view;
         $this->layout = $aliases->get('@views') . '/layout/main';
+
+        BaseService::G()->setContainer($container);
     }
     //@override
     public function getViewPath(): string

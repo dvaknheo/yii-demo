@@ -3,7 +3,7 @@
 namespace App\Blog\Archive;
 
 use App\Controller;
-use MY\Service\BlogService;
+use App\Service\BlogService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

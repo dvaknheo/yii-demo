@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Yii\Web\Data\DataResponseFactoryInterface;
 
-use MY\Service\UserService;
+use App\Service\UserService;
 
 class ApiUserController
 {

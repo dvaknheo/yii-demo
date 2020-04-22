@@ -15,7 +15,7 @@ use MY\Base\Helper\AppHelper as A;
 </h4>
 <ul class="list-group mb-3">
     <?php
-A::OBStart();
+//A::OBStart();
     $blockBegin = Html::beginTag(
     'li',
     ['class' => 'list-group-item d-flex flex-column justify-content-between lh-condensed']
@@ -39,7 +39,7 @@ A::OBStart();
         echo 'tags not found';
     }
     echo $blockEnd;
-A::OBEnd(__FILE__);
+//A::OBEnd(__FILE__);
 
     ?>
 </ul>

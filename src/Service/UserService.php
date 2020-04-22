@@ -4,7 +4,7 @@
  * From this time, you never be alone~
  */
 
-namespace MY\Service;
+namespace App\Service;
 
 use App\Entity\User;
 use Cycle\ORM\Transaction;

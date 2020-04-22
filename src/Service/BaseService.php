@@ -3,7 +3,7 @@
  * DuckPHP
  * From this time, you never be alone~
  */
-namespace MY\Base;
+namespace App\Service;
 
 
 use Cycle\ORM\ORMInterface;

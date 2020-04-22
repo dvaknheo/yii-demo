@@ -14,7 +14,7 @@ use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\Web\Data\DataResponseFactoryInterface;
 
-use MY\Service\UserService;
+use App\Service\UserService;
 
 class ContactController extends Controller
 {

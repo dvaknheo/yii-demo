@@ -24,7 +24,7 @@ $container = $container->get(ContainerInterface::class);
 require_once dirname(__DIR__) . '/src/globals.php';
 
 ////[[[[
-//*
+/*
 $path = realpath(__DIR__.'/..');
 $options=[];
 $options['path'] = $path;
