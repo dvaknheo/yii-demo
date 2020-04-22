@@ -6,9 +6,6 @@
 
 namespace MY\Service;
 
-use MY\Base\BaseService;
-use MY\Base\Helper\ServiceHelper as S;
-
 use App\Blog\Entity\Post;
 use App\Blog\Entity\Tag;
 use App\Blog\Archive\ArchiveRepository;

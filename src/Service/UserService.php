@@ -6,14 +6,13 @@
 
 namespace MY\Service;
 
-use MY\Base\BaseService;
-use MY\Base\Helper\ServiceHelper as S;
-
 use App\Entity\User;
 use Cycle\ORM\Transaction;
 use Yiisoft\Auth\IdentityRepositoryInterface;
 use Yiisoft\Yii\Web\User\User as WebUser;
 use Yiisoft\Mailer\MailerInterface;
+use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 
 class UserService extends BaseService
 {
@@ -48,7 +47,6 @@ class UserService extends BaseService
             ->withCurrentPage($pageNum);
         return $paginator;
     }
-    }
     public function simpleProfile($login)
     {
         $userRepository = $this->getORM()->getRepository(User::class);
@@ -66,7 +64,7 @@ class UserService extends BaseService
     {
         $userRepository = $this->getORM()->getRepository(User::class);
         $user = $userRepository->findByLogin($login);
-        return $$user;
+        return $user;
     }
     
     public function login($body)

@@ -6,8 +6,6 @@
 
 namespace MY\Service;
 
-use MY\Base\BaseService;
-use MY\Base\Helper\ServiceHelper as S;
 
 use App\Blog\Entity\Comment;
 use App\Blog\Entity\Post;
