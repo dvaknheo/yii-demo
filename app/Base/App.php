@@ -23,13 +23,14 @@ class App extends DuckPhp_App
         $this->options['skip_404_handler'] = true;
         //$this->options['skip_exception_check'] = true;
 
-        $this->options['path_config'] = basename($this->options['path']).'/config';
-        //$this->options['path_view'] = basename($this->options['path']).'/view';
+
         
         $this->options['is_debug'] = true;
     }
     public function onInit()
     {
+        $this->options['path_config'] = basename($this->options['path']).'/config';
+        //$this->options['path_view'] = basename($this->options['path']).'/view';
         Route::G(BaseRoute::G());
         
         $controller = blog::class;
