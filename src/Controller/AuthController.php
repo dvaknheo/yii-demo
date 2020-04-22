@@ -13,6 +13,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\Web\Data\DataResponseFactoryInterface;
+use Yiisoft\Yii\Web\User\User;
 
 class AuthController extends Controller
 {

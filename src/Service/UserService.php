@@ -69,7 +69,6 @@ class UserService extends BaseService
     
     public function login($body)
     {
-        $body = $request->getParsedBody();
         $error = null;
         
         foreach (['login', 'password'] as $name) {
@@ -86,7 +85,7 @@ class UserService extends BaseService
         if (!$identity->validatePassword($body['password'])) {
             throw new \InvalidArgumentException('Invalid password');
         }
-        if ($this->user->login($identity)) {
+        if ($this->getObject(WebUser::class)->login($identity)) {
            return true;
         }
         throw new \InvalidArgumentException('Unable to login');
@@ -137,7 +136,7 @@ class UserService extends BaseService
             throw new \InvalidArgumentException('Unable to register user with such username.');
         }
 
-        $user = new User($body['login'], $body['password']);
+        $user = new WebUser($body['login'], $body['password']);
 
         $transaction = new Transaction($orm);
         $transaction->persist($user);
