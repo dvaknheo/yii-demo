@@ -24,14 +24,15 @@ $container = $container->get(ContainerInterface::class);
 require_once dirname(__DIR__) . '/src/globals.php';
 
 ////[[[[
-/*
+//*
 $path = realpath(__DIR__.'/..');
 $options=[];
 $options['path'] = $path;
-$options['container'] = $container;
+$options['handle_all_exception']=false;
+$options['handle_all_dev_error']=false;
+
 
 \DuckPhp\App::G()->init($options);
-/*
 $flag = \DuckPhp\App::G()->run();
 if($flag){
     return;

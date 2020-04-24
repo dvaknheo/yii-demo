@@ -12,7 +12,6 @@ class user
 {
     public function __construct()
     {
-        //C::Auth();
     }
     protected getAttribute($key,$default)
     {

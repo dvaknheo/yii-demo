@@ -13,7 +13,6 @@ class BaseService
 {
     
     protected static $container;
-    protected static $promise;
     
     
     // copy from other same as GetInstance;
@@ -41,40 +40,35 @@ class BaseService
     public static function SetContainer($container)
     {
         self::$container=$container;
+        self::G()->initSQLlogger();
     }
     public static function SetPromise($promise)
     {
-        self::$promise=$promise;
+        $ref=new \ReflectionClass($promise);
+        $prop=$ref->getProperty('container');
+        $prop->setAccessible(true);
+        $container=$prop->getValue($promise);
+        self::$container=$container;
+        
+        self::G()->initSQLlogger();
     }
     public function getORM()
     {
         $container=static::$container;
-        $promise=static::$promise;
-        if(!empty($promise)){
-            return $promise->getORM();
-        }
         return $container->get(ORMInterface::class);
     }
     public function getObject($class)
     {
         $container=static::$container;
-        $promise=static::$promise;
-        if(!empty($promise)){
-            return $promise->get($class);
-        }
         return $container->get($class);
     }
     
     public function initSQLlogger()
     {
-        $container=$this->getObject(ContainerInterface::class);
+        $container=self::$container;//$this->getObject(ContainerInterface::class);
         
         $dm=$this->getObject('Spiral\\Database\\DatabaseManager');
         $logger=$this->getObject('Psr\\Log\\LoggerInterface');
         $dm->getDrivers()[0]->setLogger($logger);
-
-
-
-        return;
     }
 }

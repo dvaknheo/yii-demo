@@ -23,10 +23,7 @@ class UserService extends BaseService
 
     public function create($login,$password)
     {
-        $user = new User($login, $password);
-        $transaction = new Transaction($this->getORM());
-        $transaction->persist($user);
-        $transaction->run();
+        //INSERT INTO `user` (`token`, `login`, `password_hash`, `created_at`, `updated_at`) VALUES ('XXX', 'aaaaa4', 'BBB', 'cccc', 'dddd');
     }
     public function all()
     {
