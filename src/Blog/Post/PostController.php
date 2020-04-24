@@ -14,8 +14,10 @@ final class PostController extends Controller
         return 'blog/post';
     }
 
-    public function index(Request $request ,LoggerInterface $logger): Response
+    public function index(Request $request): Response
     {
+        //BlogService::G()->initSQLlogger();
+        
         $slug = $request->getAttribute('slug', null);
         $item = BlogService::G()->getPostData($slug);
         if ($item === null) {

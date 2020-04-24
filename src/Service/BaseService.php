@@ -7,6 +7,7 @@ namespace App\Service;
 
 
 use Cycle\ORM\ORMInterface;
+use Psr\Container\ContainerInterface;
 
 class BaseService
 {
@@ -62,5 +63,18 @@ class BaseService
             return $promise->get($class);
         }
         return $container->get($class);
+    }
+    
+    public function initSQLlogger()
+    {
+        $container=$this->getObject(ContainerInterface::class);
+        
+        $dm=$this->getObject('Spiral\\Database\\DatabaseManager');
+        $logger=$this->getObject('Psr\\Log\\LoggerInterface');
+        $dm->getDrivers()[0]->setLogger($logger);
+
+
+
+        return;
     }
 }
