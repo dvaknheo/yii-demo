@@ -10,8 +10,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Cycle\Command\CycleDependencyPromise;
 
-use DuckPhp\App;
-use MY\Service\FixtureService;
+use App\Service\FixtureService;
 
 use Faker\Factory;
 
@@ -27,23 +26,9 @@ class AddCommand extends Command
     {
         $this->promise = $promise;
         parent::__construct();
-        $this->doInit($promise);
+        FixtureService::SetPromise($promise);
     }
-    protected function doInit($promise)
-    {
-        $path = realpath(__DIR__.'/../../..');
-        $options=[];
-        $options['path'] = $path;
-        $options['skip_setting_file'] = true;
-        $options['skip_404_handler'] = true;
-        $options['skip_exception_check'] = true;
-        $options['handle_all_exception'] = false;
-        $options['is_debug'] = true;
-        $options['promise'] = $promise;
 
-        App::G()->init($options);
-    }
-    
     public function configure(): void
     {
         $this
