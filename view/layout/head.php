@@ -9,8 +9,13 @@ $user_id=null;
 
 $t=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
 $currentUrl='';
-NavBar::counter($t==='/'?1:0);
-
+NavBar::counter(0);
+if($t==='/'){
+    NavBar::counter(1);
+}
+if($t==='/user'){
+    NavBar::counter(1);
+}
 ?><!DOCTYPE html>
 <html lang="">
 <head>

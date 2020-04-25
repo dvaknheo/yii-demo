@@ -8,14 +8,10 @@ namespace MY\Service;
 
 use MY\Base\BaseService;
 use MY\Base\Helper\ServiceHelper as S;
+use MY\Model\UserModel;
+use MY\Base\App;
 
-use App\Entity\User;
-use Cycle\ORM\Transaction;
-use Yiisoft\Auth\IdentityRepositoryInterface;
-use Yiisoft\Yii\Web\User\User as WebUser;
-use Yiisoft\Mailer\MailerInterface;
-use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Data\Paginator\OffsetPaginator;
+
 
 class UserService extends BaseService
 {
@@ -40,12 +36,7 @@ class UserService extends BaseService
     }
     public function listByPage($pageNum)
     {
-        $userRepo = $this->getORM()->getRepository(User::class);
-        $dataReader = $userRepo->findAll()->withSort((new Sort([]))->withOrderString('login'));
-        $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(self::PAGINATION_INDEX)
-            ->withCurrentPage($pageNum);
-        return $paginator;
+        return ['data'=>[],'total'=>0];
     }
     public function simpleProfile($login)
     {
@@ -62,8 +53,7 @@ class UserService extends BaseService
     }
     public function profile($login)
     {
-        $userRepository = $this->getORM()->getRepository(User::class);
-        $user = $userRepository->findByLogin($login);
+        $user=UserModel::findByLogin($login);
         return $user;
     }
     
@@ -95,7 +85,7 @@ class UserService extends BaseService
     {
         $this->getObject(WebUser::class)->logout();
     }
-    public function sendMail($body, $file,)
+    public function sendMail($body, $file)
     {
         $to = $this->parameters->get('supportEmail');
         $from = $this->parameters->get('mailer.username');

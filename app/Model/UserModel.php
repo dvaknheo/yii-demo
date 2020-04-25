@@ -10,8 +10,9 @@ use MY\Base\Helper\ModelHelper as M;
 
 class UserModel extends BaseModel
 {
-    public function foo()
+    public static function findByLogin($login)
     {
-        return DATE(DATE_ATOM);
+        $sql="select * from user where login=?";
+        return M::DB()->fetch($sql,$login);
     }
 }

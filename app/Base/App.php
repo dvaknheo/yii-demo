@@ -21,7 +21,6 @@ class App extends DuckPhp_App
         require_once(__DIR__.'/functions.php');
         parent::__construct();
         
-        $this->options['skip_setting_file'] = true;
         //$this->options['skip_exception_check'] = true; 
         $this->options['use_short_functions'] = true; 
         
@@ -31,7 +30,7 @@ class App extends DuckPhp_App
     }
     public function onInit()
     {
-        $this->options['path_config'] = basename($this->options['path']).'/config';
+        $this->options['path_config'] = 'app/config';
         //$this->options['path_view'] = basename($this->options['path']).'/view';
         //Route::G(BaseRoute::G());
         

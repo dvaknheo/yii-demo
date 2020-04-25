@@ -1,4 +1,4 @@
 <?php
-?><h1><?=_h($login)?></h1><div>
-    <span class="text-muted">Created at <?=$created_at?></span>
+?><h1><?=_h($item['login'])?></h1><div>
+    <span class="text-muted">Created at <?=$item['created_at']?></span>
 </div>

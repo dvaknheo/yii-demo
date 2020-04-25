@@ -12,6 +12,7 @@ class user
 {
     public function __construct()
     {
+        C::setViewWrapper('layout/head','layout/foot');
     }
     protected function getAttribute($key,$default)
     {
@@ -20,22 +21,26 @@ class user
     }
     public function index()
     {
-        $page=(int)$this->getAttribute('page',1);
+        $pageNum=(int)$this->getAttribute('page',1);
 
-        $data = UserService::G()->listByPage($pageNum);
+        list($data,$total) = UserService::G()->listByPage($pageNum);
         
+        $pagehtml=C::PageHtml($total);
+        $data=[
+            ''
+        ];
         
         C::Show(['data' => $data],'user/index');
     }
     public function profile()
     {
-    var_dump("??");
         $login = $this->getAttribute('login', null);
         $item =  UserService::G()->profile($login);
         if ($item === null) {
             C::Exit404();
             return;
         }
+        $item['created_at']=date('h:i:s d.m.Y',strtotime($item['created_at']));
         C::Show(['item' => $item],'user/profile');
     }
 }
