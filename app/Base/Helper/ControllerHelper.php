@@ -10,5 +10,14 @@ use DuckPhp\Helper\ControllerHelper as Helper;
 
 class ControllerHelper extends Helper
 {
-   
+   public static function getUploadFile($field)
+   {
+        $files = $request->getUploadedFiles();
+        if (!empty($files[$field]) && $files[$field]->getError() === UPLOAD_ERR_OK) {
+            $file = $files[$field];
+        }else{
+            $file=null;
+        }
+        return $file;
+    }
 }

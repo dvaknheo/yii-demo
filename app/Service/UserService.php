@@ -95,8 +95,10 @@ class UserService extends BaseService
     {
         $this->getObject(WebUser::class)->logout();
     }
-    public function sendMail($body, $file,$to,$from)
+    public function sendMail($body, $file,)
     {
+        $to = $this->parameters->get('supportEmail');
+        $from = $this->parameters->get('mailer.username');
         foreach (['subject', 'name', 'email', 'content'] as $name) {
             if (empty($body[$name])) {
                 throw new \InvalidArgumentException(ucfirst($name) . ' is required');

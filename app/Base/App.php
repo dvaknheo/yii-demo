@@ -18,10 +18,13 @@ class App extends DuckPhp_App
     
     public function __construct()
     {
+        require_once(__DIR__.'/functions.php');
         parent::__construct();
         
         $this->options['skip_setting_file'] = true;
-        $this->options['skip_exception_check'] = true;
+        //$this->options['skip_exception_check'] = true; 
+        $this->options['use_short_functions'] = true; 
+        
         $this->options['skip_404_handler'] = true;
         $this->options['is_debug'] = true;
         $this->options['error_404']=function(){};
@@ -99,14 +102,25 @@ class App extends DuckPhp_App
         $path=$_SERVER['REQUEST_URI'];
         $url="http://yii3-init.demo.dev".$path;
         $data2=$this->curl_file_get_contents([$url,'127.0.0.1:80']);
+        
+        $data1=$this->dealData($data1);
+        $data2=$this->dealData($data2);
+        
         if($data2===$data1){
+            var_dump('same.');
             return true;
         }
         file_put_contents(__DIR__.'/../../runtime/a.log',$data1);
         file_put_contents(__DIR__.'/../../runtime/b.log',$data2);
-                var_dump($url);
-
+        
+        var_dump('different!');
         return false;
+    }
+    protected function dealData($data)
+    {
+        $p=preg_quote('name="_csrf" value="');
+        $data=preg_replace('/'.$p.'[^"]+"/','name="_csrf" value=""',$data);
+        return $data;
     }
     function curl_file_get_contents($url)
     {

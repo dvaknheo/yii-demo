@@ -11,9 +11,8 @@
     <tbody>
 <?php
 foreach ($data as $v) {
-    
 ?>
-<tr><td><a class="btn btn-link" href="<?=$url_xx?>"><?=$xx?></a><a class="btn btn-link" href="<?=$url_xx?>">API User Data</a></td><td>Tue, 14 Apr 2020 02:22:27 +0000</td></tr><tr><?php
+<tr><td><a class="btn btn-link" href="<?=$url_xx?>"><?=$xx?></a><a class="btn btn-link" href="<?=$url_xx?>">API User Data</a></td><td>Tue, 14 Apr 2020 02:22:27 +0000</td></tr><?php
 }
 ?>
     </tbody>

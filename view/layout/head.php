@@ -6,8 +6,10 @@ use MY\Base\Helper\ViewHelper as V;
 
 $login="???";
 $user_id=null;
-$currentUrl="???";
-NavBar::counter(1);
+
+$t=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
+$currentUrl='';
+NavBar::counter($t==='/'?1:0);
 
 ?><!DOCTYPE html>
 <html lang="">

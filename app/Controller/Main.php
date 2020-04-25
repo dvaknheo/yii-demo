@@ -21,7 +21,7 @@ class Main
     }
     public function contact()
     {
-        $body = $request->getParsedBody();
+        $body = C::SG()->_POST;
         $parameters = [
             'body' => $body,
         ];
@@ -29,19 +29,8 @@ class Main
             $sent = false;
             $error = '';
             try {
-                $files = $request->getUploadedFiles();
-
-                if (!empty($files['file']) && $files['file']->getError() === UPLOAD_ERR_OK) {
-                    $file = $files['file'];
-                }else{
-                    $file=null;
-                }
-                
-                $to = $this->parameters->get('supportEmail');
-                $from = $this->parameters->get('mailer.username');
-                
-                
-                UserService::G()->sendMail($body, $file,$to,$from);
+                $file = C::getUploadFile('file');
+                UserService::G()->sendMail($body, $file);
                 $sent = true;
             } catch (\Throwable $e) {
                 $this->logger->error($e);
@@ -50,10 +39,8 @@ class Main
             $parameters['sent'] = $sent;
             $parameters['error'] = $error;
         }
-
         $parameters['csrf'] = SessionService::G()->csrf_token();
-
-        return $this->render('form', $parameters);
+        C::Show($parameters,'contact/form');
     }
     public function login()
     {

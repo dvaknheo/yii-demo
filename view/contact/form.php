@@ -1,6 +1,7 @@
 <?php
 use Yiisoft\Yii\Bootstrap4\Alert;
 //var_dump(array_keys(get_defined_vars());
+$url_contact='/contact';
 if (isset($sent)) {
     echo Alert::widget()
               ->options(['class' => $sent ? 'alert-success' : 'alert-danger'])
@@ -13,7 +14,7 @@ if (isset($sent)) {
 ?>
 <form id="contactForm"
       method="POST"
-      action="<?= V::URL('site/contact') ?>"
+      action="<?= $url_contact ?>"
       enctype="multipart/form-data"
 >
     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
