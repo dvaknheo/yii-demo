@@ -15,4 +15,13 @@ class UserModel extends BaseModel
         $sql="select * from user where login=?";
         return M::DB()->fetch($sql,$login);
     }
+    public static function listByPage($pageNum,$pageSize=30)
+    {
+        $sql="select * from user where true";
+        $sql_total=M::SqlForPage($sql, $pageNum, $pageSize);
+        $sql_page=M::SqlForPage($sql, $pageNum, $pageSize);
+        $total=M::DB()->fetchColumn($sql_total);
+        $data=M::DB()->fetchAll($sql_page);
+        return [$data,$total];
+    }
 }

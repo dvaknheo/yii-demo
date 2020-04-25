@@ -36,7 +36,8 @@ class UserService extends BaseService
     }
     public function listByPage($pageNum)
     {
-        return ['data'=>[],'total'=>0];
+        $user=UserModel::listByPage($pageNum);
+        return [[],0];
     }
     public function simpleProfile($login)
     {
