@@ -6,7 +6,8 @@
 namespace MY\Controller;
 
 use MY\Base\Helper\ControllerHelper as C;
-use MY\Service\TestService;
+use MY\Service\UserService;
+use MY\Service\SessionService;
 
 class Main
 {
@@ -50,7 +51,7 @@ class Main
             $parameters['error'] = $error;
         }
 
-        $parameters['csrf'] = $request->getAttribute('csrf_token');
+        $parameters['csrf'] = SessionService::G()->csrf_token();
 
         return $this->render('form', $parameters);
     }
@@ -72,10 +73,10 @@ class Main
         $data=[
             'body' => $body,
             'error' => $error,
-            'csrf' => $request->getAttribute('csrf_token'),
+            'csrf' => SessionService::G()->csrf_token(),
         ];
         
-        C::Show($data,'site/login');
+        C::Show($data,'auth/login');
     }
     public function logout()
     {
@@ -100,10 +101,10 @@ class Main
         $data=[
             'body' => $body,
             'error' => $error,
-            'csrf' => $request->getAttribute('csrf_token'),
+            'csrf' => SessionService::G()->csrf_token(),
         ];
         
-        C::Show($data,'site/signup');
+        C::Show($data,'signup/signup');
     }
     public function user()
     {

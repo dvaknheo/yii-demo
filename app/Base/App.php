@@ -100,11 +100,13 @@ class App extends DuckPhp_App
         $path=$_SERVER['REQUEST_URI'];
         $url="http://yii3-init.demo.dev".$path;
         $data2=$this->curl_file_get_contents([$url,'127.0.0.1:80']);
-        if($data2!==$data1){
+        if($data2===$data1){
             return true;
         }
         file_put_contents(__DIR__.'/../../runtime/a.log',$data1);
         file_put_contents(__DIR__.'/../../runtime/b.log',$data2);
+                var_dump($url);
+
         return false;
     }
     function curl_file_get_contents($url)

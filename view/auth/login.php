@@ -1,5 +1,6 @@
 <?php
-$url_login = V::URL('site/login');
+use MY\Base\Helper\ViewHelper as V;
+$url_login = V::URL('login');
 $error = $error ?? null;
 ?>
 
@@ -17,7 +18,6 @@ $error = $error ?? null;
   <div class="form-group">
     <label for="email">Password</label>
       <input type="password" class="form-control" name="password" value="" required>  </div>
-  </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 

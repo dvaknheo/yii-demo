@@ -1,13 +1,7 @@
 <?php
 
 use Yiisoft\Html\Html;
-
-/**
- * @var $this \Yiisoft\View\View
- * @var $urlGenerator \Yiisoft\Router\UrlGeneratorInterface
- * @var $csrf string
- */
-
+$url_signup = '/signup';
 $error = $error ?? null;
 ?>
 
@@ -17,7 +11,7 @@ $error = $error ?? null;
 </div>
 <?php endif ?>
 
-<form id="signupForm" method="POST" action="<?= V::URL('site/signup') ?>" enctype="multipart/form-data">
+<form id="signupForm" method="POST" action="<?= $url_signup?>" enctype="multipart/form-data">
   <input type="hidden" name="_csrf" value="<?= $csrf ?>">
   <div class="form-group">
     <label for="subject">Login</label>
