@@ -12,9 +12,8 @@ class blog
 {
     public function __construct()
     {
-        C::Auth();
     }
-    protected getAttribute($key,$default)
+    protected function getAttribute($key,$default)
     {
         $data=C::getParameters();
         return $data[$key]??$default;
@@ -54,7 +53,7 @@ class blog
     {
         $archive = BlogService::G()->getArchiveData();
         
-        C::Show(['archive'=>$archive]),'blog/archive/index');
+        C::Show(['archive'=>$archive],'blog/archive/index');
     }
     public function archive_yearly()
     {
