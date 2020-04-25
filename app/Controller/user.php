@@ -20,11 +20,12 @@ class user
     }
     public function index()
     {
-        $pageNum = (int)$this->getAttribute('page', 1);
+        $page=(int)$this->getAttribute('page',1);
+
+        $data = UserService::G()->listByPage($pageNum);
         
-        $paginator = UserService::G()->listByPage($pageNum);
         
-        C::Show(['paginator' => $paginator],'user/index');
+        C::Show(['data' => $data],'user/index');
     }
     public function profile()
     {

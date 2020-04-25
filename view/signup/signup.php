@@ -17,12 +17,12 @@ $error = $error ?? null;
     <label for="subject">Login</label>
       <input type="text" class="form-control" name="login" value="" required><?php
 ?>
-      </div>
+  </div>
   <div class="form-group">
     <label for="email">Password</label>
       <input type="password" class="form-control" name="password" value="" required><?php
 ?>
-      </div>
+  </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 

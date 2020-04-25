@@ -93,10 +93,6 @@ class Main
         
         C::Show($data,'signup/signup');
     }
-    public function user()
-    {
-        C::Exit404(true);
-    }
     public function test()
     {
         C::Show(get_defined_vars(),'site/index');

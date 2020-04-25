@@ -37,7 +37,9 @@ class App extends DuckPhp_App
         
         $controller = blog::class;
 
-        $this->options['route_map']=[
+        $this->options['route_map_important']=[
+            '~^user(/page-(?<page>\d+))?$'=> '!user->index',
+            '~^user/(?<login>\w+)$'=> '!user->profile',
             //'@/api/user/{login}' => "!api@index",
             /*
             
@@ -50,10 +52,11 @@ class App extends DuckPhp_App
             '~^blog/archive/(?<year>\d+)-(?<month>\d+)(/page(?<page>\d+))?$'     =>"$controller@archive_monthly",
             //*/
         ];
-        // ! => 'namespace\controller. z'
+        foreach($this->options['route_map_important'] as &$v){
+            $v=str_replace('!','MY\\Controller\\',$v);
+        }
+        unset($v);
         
-        //inhert.
-
         $ret = parent::onInit();
         
         return $ret;

@@ -15,6 +15,7 @@ class api
     }
     public function user()
     {
+        C::Exit404();
         //$p=C::getParamge();
     }
 }
