@@ -21,6 +21,7 @@ class App extends DuckPhp_App
         parent::__construct();
         
         $this->options['skip_setting_file'] = true;
+        $this->options['skip_exception_check'] = true;
         $this->options['skip_404_handler'] = true;
         $this->options['is_debug'] = true;
         $this->options['error_404']=function(){};
@@ -34,7 +35,7 @@ class App extends DuckPhp_App
         $controller = blog::class;
 
         $this->options['route_map']=[
-            '@/api/user/{login}' => "!api@index",
+            //'@/api/user/{login}' => "!api@index",
             /*
             
             '/blog'                                                             =>"$controller@index",
@@ -49,9 +50,7 @@ class App extends DuckPhp_App
         // ! => 'namespace\controller. z'
         
         //inhert.
-        $this->container=$this->options['container']??null;
-        $this->promise=$this->options['promise']??null;
-        
+
         $ret = parent::onInit();
         
         return $ret;

@@ -13,7 +13,7 @@ class user
     public function __construct()
     {
     }
-    protected getAttribute($key,$default)
+    protected function getAttribute($key,$default)
     {
         $data = C::getParameters();
         return $data[$key]??$default;
@@ -28,6 +28,7 @@ class user
     }
     public function profile()
     {
+    var_dump("??");
         $login = $this->getAttribute('login', null);
         $item =  UserService::G()->profile($login);
         if ($item === null) {
