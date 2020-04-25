@@ -10,9 +10,5 @@ use DuckPhp\Helper\ControllerHelper as Helper;
 
 class ControllerHelper extends Helper
 {
-    public static function Exit404($flag = true)
-    {
-        Route::G()->forceFail();
-        //return parent::Exit404($flag);
-    }
+   
 }

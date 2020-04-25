@@ -1,12 +1,4 @@
 <?php
-
-use Yiisoft\Html\Html;
-
-/**
- * @var $this \Yiisoft\View\View
- * @var $urlGenerator \Yiisoft\Router\UrlGeneratorInterface
- * @var $csrf string
- */
 $url_login = V::URL('site/login');
 $error = $error ?? null;
 ?>

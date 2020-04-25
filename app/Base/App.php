@@ -23,6 +23,7 @@ class App extends DuckPhp_App
         $this->options['skip_setting_file'] = true;
         $this->options['skip_404_handler'] = true;
         $this->options['is_debug'] = true;
+        $this->options['error_404']=function(){};
     }
     public function onInit()
     {
@@ -63,7 +64,7 @@ class App extends DuckPhp_App
     public function run():bool
     {
         $domain=static::Domain();
-        if($domain==='yii3-init.demo.dev'){
+        if($domain==='http://yii3-init.demo.dev'){
             return false;
         }
         
@@ -77,8 +78,9 @@ class App extends DuckPhp_App
         if($this->isExited){
             return false;
         }
-        //$this->diff($data);
-        
+        if($flag){
+            $this->diff($data);
+        }
         return $flag;
     }
     public function _OnDefaultException($ex):void
@@ -93,10 +95,17 @@ class App extends DuckPhp_App
     {
         throw new ExitException();
     }
-    protected function diff($data)
+    protected function diff($data1)
     {
-        $url="http://yii3.demo.dev".$path;
-        $data=$this->curl_file_get_contents([$url,'127.0.0.1:80']);
+        $path=$_SERVER['REQUEST_URI'];
+        $url="http://yii3-init.demo.dev".$path;
+        $data2=$this->curl_file_get_contents([$url,'127.0.0.1:80']);
+        if($data2!==$data1){
+            return true;
+        }
+        file_put_contents(__DIR__.'/../../runtime/a.log',$data1);
+        file_put_contents(__DIR__.'/../../runtime/b.log',$data2);
+        return false;
     }
     function curl_file_get_contents($url)
     {

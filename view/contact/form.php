@@ -1,15 +1,6 @@
 <?php
-
-/**
- * @var $this \Yiisoft\View\View
- * @var $urlGenerator \Yiisoft\Router\UrlGeneratorInterface
- * @var $body array
- * @var $csrf string
- */
-
-use Yiisoft\Html\Html;
 use Yiisoft\Yii\Bootstrap4\Alert;
-
+//var_dump(array_keys(get_defined_vars());
 if (isset($sent)) {
     echo Alert::widget()
               ->options(['class' => $sent ? 'alert-success' : 'alert-danger'])

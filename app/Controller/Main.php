@@ -12,15 +12,7 @@ class Main
 {
     public function __construct()
     {
-        $this->auth();
         C::setViewWrapper('layout/head','layout/foot');
-    }
-    protected function auth()
-    {
-        if(! C::GET('t')){
-            C::Exit404();
-            return;
-        }
     }
     public function index()
     {
@@ -32,10 +24,9 @@ class Main
         $parameters = [
             'body' => $body,
         ];
-        if ($request->getMethod() === Method::POST) {
+        if (!empty($body)) {
             $sent = false;
             $error = '';
-
             try {
                 $files = $request->getUploadedFiles();
 
@@ -44,8 +35,11 @@ class Main
                 }else{
                     $file=null;
                 }
+                
                 $to = $this->parameters->get('supportEmail');
                 $from = $this->parameters->get('mailer.username');
+                
+                
                 UserService::G()->sendMail($body, $file,$to,$from);
                 $sent = true;
             } catch (\Throwable $e) {
@@ -110,6 +104,10 @@ class Main
         ];
         
         C::Show($data,'site/signup');
+    }
+    public function user()
+    {
+        C::Exit404(true);
     }
     public function test()
     {
