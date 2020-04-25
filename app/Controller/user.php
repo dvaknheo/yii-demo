@@ -26,11 +26,12 @@ class user
         list($data,$total) = UserService::G()->listByPage($pageNum);
         
         $pagehtml=C::PageHtml($total);
-        $data=[
-            ''
+        $p=[
+            'data'=>$data,
+            'total'=>$total,
+            'pager'=>$pagehtml,
         ];
-        
-        C::Show(['data' => $data],'user/index');
+        C::Show($p,'user/index');
     }
     public function profile()
     {

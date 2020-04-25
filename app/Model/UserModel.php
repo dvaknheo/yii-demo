@@ -17,11 +17,16 @@ class UserModel extends BaseModel
     }
     public static function listByPage($pageNum,$pageSize=30)
     {
-        $sql="select * from user where true";
-        $sql_total=M::SqlForPage($sql, $pageNum, $pageSize);
+        $sql="select * from user where true order by login ";
+        $sql_total=M::SqlForCountSimply($sql);
         $sql_page=M::SqlForPage($sql, $pageNum, $pageSize);
         $total=M::DB()->fetchColumn($sql_total);
         $data=M::DB()->fetchAll($sql_page);
         return [$data,$total];
+    }
+    ////
+    public function create($login,$password)
+    {
+        //
     }
 }

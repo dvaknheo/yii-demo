@@ -11,11 +11,24 @@
     <tbody>
 <?php
 foreach ($data as $v) {
+    $time=date('D, d M Y H:i:s +0000',strtotime(($v['created_at']))); // +0000 => O ?
 ?>
-<tr><td><a class="btn btn-link" href="<?=$url_xx?>"><?=$xx?></a><a class="btn btn-link" href="<?=$url_xx?>">API User Data</a></td><td>abc</td></tr><?php
+<tr><?php?>
+<td><a class="btn btn-link" href="/user/<?=$v['login']?>"><?=$v['login']?></a><a class="btn btn-link" href="/api/user/<?=$v['login']?>">API User Data</a></td><?php?>
+<td><?=$time?></td><?php?>
+</tr><?php
 }
 ?>
     </tbody>
 </table>
 <?php
 echo $pagination;
+/*
+<nav id="w0-post-card" class="Page navigation">
+<ul class="pagination">
+<li class="page-item disabled"><a class="page-link">Previous</a></li><li class="page-item disabled"><a class="page-link" href="/user/page-1">1</a></li><li class="page-item"><a class="page-link" href="/user/page-2">2</a></li><li class="page-item"><a class="page-link" href="/user/page-3">3</a></li><li class="page-item"><a class="page-link" href="/user/page-4">4</a></li><li class="page-item"><a class="page-link" href="/user/page-5">5</a></li><li class="page-item"><a class="page-link" href="/user/page-6">6</a></li><li class="page-item"><a class="page-link" href="/user/page-7">7</a></li><li class="page-item"><a class="page-link" href="/user/page-2">Next</a></li>
+</ul>
+</nav>
+
+
+*/

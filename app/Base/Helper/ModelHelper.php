@@ -18,7 +18,7 @@ class ModelHelper extends Helper
     }
     public static function SqlForCountSimply($sql)
     {
-        $sql=preg_replace('/^\s*select(.*?)\sfrom\s/is',function($m){return 'SELECT COUNT(*) as c FROM ';},$sql);
+        $sql=preg_replace_callback('/^\s*select(.*?)\sfrom\s/is',function($m){return 'SELECT COUNT(*) as c FROM ';},$sql);
         return $sql;
     }
 }
