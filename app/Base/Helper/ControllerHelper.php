@@ -5,8 +5,8 @@
  */
 namespace MY\Base\Helper;
 
-use DuckPhp\Core\Route;
 use DuckPhp\Helper\ControllerHelper as Helper;
+use MY\Base\BasePager;
 
 class ControllerHelper extends Helper
 {
@@ -19,5 +19,9 @@ class ControllerHelper extends Helper
             $file=null;
         }
         return $file;
+    }
+    public static function pageExt($url,$pageNum)
+    {
+        BasePager::G()->pageExt($url,$pageNum);
     }
 }

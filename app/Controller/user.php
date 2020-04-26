@@ -25,6 +25,7 @@ class user
 
         list($data,$total) = UserService::G()->listByPage($pageNum);
         
+        C::PageExt('/user/page-{page}',$pageNum);
         $pagehtml=C::PageHtml($total);
         $p=[
             'data'=>$data,

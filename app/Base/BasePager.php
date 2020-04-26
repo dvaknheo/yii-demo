@@ -1,57 +1,37 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
+namespace MY\Base;
+use DuckPhp\Ext\Pager;
 
-namespace App\Widget;
-;
+use Yiisoft\Yii\Bootstrap4\Html;
+use Yiisoft\Yii\Bootstrap4\Widget;
 
-class OffsetPagination extends Widget
+class BasePager extends Pager
 {
-
-    private int $pagesCount;
-    private int $currentPage;
-    private array $pages;
-    private bool $prepared;
-
-
-    public function paginator(?Paginator $paginator): self
+    
+    protected $pagesCount;
+    protected $currentPage;
+    protected $template;
+    
+    public function current() : int
     {
-        $this->paginator = $paginator;
-        $this->prepared = false;
-        return $this;
+        return $this->options['current']??1;
     }
-
-
-
-
-
-    /**
-     * The HTML attributes for the widget container tag. The following special options are recognized.
-     *
-     * {@see \Yiisoft\Html\Html::renderTagAttributes()} for details on how attributes are being rendered.
-     */
-    public function options(array $value): self
+    public function pageSize($new_value = null)
     {
-        $this->options = $value;
-
-        return $this;
+        return 5;
     }
-
-    protected function run(): string
+    public function render($total, $options = []) : string
     {
-        if ($this->paginator === null) {
+        $this->pagesCount =(int) ceil($total / $this->pageSize());
+        $this->currentPage = $this->current();
+        if($this->pagesCount<=1){
             return '';
         }
-        if (!isset($this->options['id'])) {
-            $this->options['id'] = "{$this->getId()}-post-card";
-        }
-
-        $this->initOptions();
         $this->prepareButtons();
-
-
+        
         return implode("\n", [
-            Html::beginTag('nav', $this->options),
+            Html::beginTag('nav', ['id'=>'w0-post-card','class'=>'Page navigation']),
             Html::beginTag('ul', ['class' => 'pagination']),
             $this->renderButtons(),
             Html::endTag('ul'),
@@ -61,9 +41,6 @@ class OffsetPagination extends Widget
 
     protected function prepareButtons(): void
     {
-
-        $this->pagesCount = $this->paginator->getTotalPages();
-        $this->currentPage = $this->paginator->getCurrentPage();
         if ($this->pagesCount > 9) {
             if ($this->currentPage <= 4) {
                 $this->pages = [...range(1, 5), null, ...range($this->pagesCount - 2, $this->pagesCount)];
@@ -93,7 +70,7 @@ class OffsetPagination extends Widget
         $result = '';
 
         // `Previous` page
-        $prevUrl = $this->paginator->isOnFirstPage() ? null : $this->getPageLink($this->currentPage - 1);
+        $prevUrl = ($this->currentPage<=1) ? null : $this->getPageLink($this->currentPage - 1);
         $result .= Html::beginTag('li', ['class' => $prevUrl === null ? 'page-item disabled' : 'page-item']);
         $result .= Html::a('Previous', $prevUrl, ['class' => 'page-link']);
         $result .= Html::endTag('li');
@@ -111,7 +88,7 @@ class OffsetPagination extends Widget
         }
 
         // `Next` page
-        $nextUrl = $this->paginator->isOnLastPage() ? null : $this->getPageLink($this->currentPage + 1);
+        $nextUrl = ($this->currentPage >= $this->pagesCount) ? null : $this->getPageLink($this->currentPage + 1);
         $result .= Html::beginTag('li', ['class' => $nextUrl === null ? 'page-item disabled' : 'page-item']);
         $result .= Html::a('Next', $nextUrl, ['class' => 'page-link']);
         $result .= Html::endTag('li');
@@ -121,13 +98,13 @@ class OffsetPagination extends Widget
 
     protected function getPageLink(int $page): ?string
     {
-        return $this->urlGenerator === null ? null : (string)($this->urlGenerator)($page);
+        return str_replace('{page}',$page,$this->template);
+    }
+    public function pageExt($url,$pageNum)
+    {
+        $this->options['current']=$pageNum;
+        $this->template=$url;
     }
 
-    protected function initOptions(): void
-    {
-        Html::addCssClass($this->options, [
-            'aria-label' => 'Page navigation',
-        ]);
-    }
+
 }

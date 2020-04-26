@@ -31,28 +31,28 @@ class App extends DuckPhp_App
     public function onInit()
     {
         $this->options['path_config'] = 'app/config';
-        //$this->options['path_view'] = basename($this->options['path']).'/view';
-        //Route::G(BaseRoute::G());
-        
+        static::Pager(BasePager::G());
         $controller = blog::class;
 
         $this->options['route_map_important']=[
-            '~^user(/page-(?<page>\d+))?$'=> '!user->index',
-            '~^user/(?<login>\w+)$'=> '!user->profile',
+            '~^user(/page-(?<page>\d+))?$'      => '#user->index',
+            '~^user/(?<login>\w+)$'             => '#user->profile',
+            //'/blog'                             =>"#blog@index",
+
             //'@/api/user/{login}' => "!api@index",
             /*
             
-            '/blog'                                                             =>"$controller@index",
-            '~^blog(/(?<id>\d+))$'                                               =>"$controller@index",
-            '~^blog/page/(?<slug>\w+)$'                                          =>"$controller@post",
-            '~^blog/tag/(?<label>\w+)(/page(?<page>\d+))?$'                       =>"$controller@tag",
-            '/blog/archive'                                                     =>"$controller@archive",
-            '^blog/archive/(?<year>\d+)$'                                       =>"$controller@archive_yearly",
-            '~^blog/archive/(?<year>\d+)-(?<month>\d+)(/page(?<page>\d+))?$'     =>"$controller@archive_monthly",
+            '/blog'                                                             =>"#blog@index",
+            '~^blog(/(?<id>\d+))?$'                                              =>"#blog@index",
+            '~^blog/page/(?<slug>\w+)$'                                         =>"#blog@post",
+            '~^blog/tag/(?<label>\w+)(/page(?<page>\d+))?$'                     =>"#blog@tag",
+            '/blog/archive'                                                     =>"#blog@archive",
+            '^blog/archive/(?<year>\d+)$'                                       =>"#blog@archive_yearly",
+            '~^blog/archive/(?<year>\d+)-(?<month>\d+)(/page(?<page>\d+))?$'    =>"#blog@archive_monthly",
             //*/
         ];
         foreach($this->options['route_map_important'] as &$v){
-            $v=str_replace('!','MY\\Controller\\',$v);
+            $v=str_replace('#','MY\\Controller\\',$v);
         }
         unset($v);
         
