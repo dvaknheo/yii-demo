@@ -53,15 +53,13 @@ class UserService extends BaseService
     }
     public function simpleProfile($login)
     {
-        $userRepository = $this->getORM()->getRepository(User::class);
-        $user = $userRepository->findByLogin($login);
-        if ($user === null) {
-            return [];
+        $user=UserModel::findByLogin($login);
+        if(!$user){
+            return null;
         }
-
         return [
-            'login' => $user->getLogin(),
-            'created_at' => $user->getCreatedAt()->format('H:i:s d.m.Y'),
+            'login' => $user['login'],
+            'created_at' => date('H:i:s d.m.Y',strtotime($user['created_at'])),
         ];
     }
     public function profile($login)

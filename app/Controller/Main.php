@@ -93,9 +93,14 @@ class Main
         
         C::Show($data,'signup/signup');
     }
-    public function test()
+    public function test1()
     {
+        
         C::Show(get_defined_vars(),'site/index');
+    }
+    public function test2()
+    {
+        //
     }
 
 }

@@ -39,7 +39,7 @@ class App extends DuckPhp_App
             '~^user/(?<login>\w+)$'             => '#user->profile',
             //'/blog'                             =>"#blog@index",
 
-            //'@/api/user/{login}' => "!api@index",
+            '~^api/user/(?<login>\w+)$' => "#api@user",
             /*
             
             '/blog'                                                             =>"#blog@index",
@@ -124,7 +124,7 @@ class App extends DuckPhp_App
         $data=preg_replace('/'.$p.'[^"]+"/','name="_csrf" value=""',$data);
         return $data;
     }
-    function curl_file_get_contents($url)
+    protected function curl_file_get_contents($url)
     {
         $ch = curl_init();
         
@@ -144,5 +144,16 @@ class App extends DuckPhp_App
         $data = curl_exec($ch);
         curl_close($ch);
         return $data !== false?$data:'';
+    }
+    
+    public function _ExitJson($ret, $exit = true)
+    {
+        $ret=[
+            'status'=>'success',
+            'data'=>$ret,
+        ];
+        static::header('Content-Type:application/json');
+        $flag = JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK;
+        echo json_encode($ret, $flag);
     }
 }
