@@ -24,6 +24,12 @@ class UserModel extends BaseModel
         $data=M::DB()->fetchAll($sql_page);
         return [$data,$total];
     }
+    public static function listAllSimple()
+    {
+        $sql="SELECT login,created_at from user where true order by login asc";
+        $data=M::DB()->fetchAll($sql);
+        return $data;
+    }
     ////
     public function create($login,$password)
     {

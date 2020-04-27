@@ -37,10 +37,10 @@ class App extends DuckPhp_App
         $this->options['route_map_important']=[
             '~^user(/page-(?<page>\d+))?$'      => '#user->index',
             '~^user/(?<login>\w+)$'             => '#user->profile',
-            //'/blog'                             =>"#blog@index",
 
-            '~^api/user/(?<login>\w+)$' => "#api@user",
+            '~^api/user/(?<login>\w+)$' => "#api@profile",
             /*
+            //'/blog'                             =>"#blog@index",
             
             '/blog'                                                             =>"#blog@index",
             '~^blog(/(?<id>\d+))?$'                                              =>"#blog@index",

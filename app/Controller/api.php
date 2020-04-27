@@ -21,6 +21,11 @@ class api
     }
     public function user()
     {
+        $items = UserService::G()->all();
+        return C::MyExitXml($items);
+    }
+    public function profile()
+    {
         $login = $this->getAttribute('login', null);
 
         $data = UserService::G()->simpleProfile($login);

@@ -36,13 +36,16 @@ class UserService extends BaseService
     }
     public function all()
     {
-        $userRepo = $this->getORM()->getRepository(User::class);
-
-        $dataReader = $userRepo->findAll()->withSort((new Sort([]))->withOrderString('login'));
-        $users = $dataReader->read();
-        $items = [];
-        foreach ($users as $user) {
-            $items[] = ['login' => $user->getLogin(), 'created_at' => $user->getCreatedAt()->format('H:i:s d.m.Y')];
+        $items=[];
+        $users=UserModel::listAllSimple();
+        foreach ($users as $v) {
+            $items[] = [
+                'item'=>
+                [
+                    'login' => $v['login'], 
+                    'created_at' => date('H:i:s d.m.Y',strtotime($v['created_at']))
+                ],
+            ];
         }
         
         return $items;

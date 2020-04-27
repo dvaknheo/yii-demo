@@ -24,4 +24,50 @@ class ControllerHelper extends Helper
     {
         BasePager::G()->pageExt($url,$pageNum);
     }
+    
+    
+    public static function MyExitXml($data)
+    {
+        //<response><status>success</status><data>
+        $data=[
+            'response'=>
+            [
+                'status'=>'success',
+                'data'=>$data,
+            ]
+        ];
+        $content = '';
+        if ($data !== null) {
+            $dom = new \DOMDocument('1.0','UTF-8');
+
+            static::buildXml($dom, $data);
+            $content = $dom->saveXML();
+        }
+
+        static::header('Content-Type:application/xml; UTF-8');
+        echo $content;
+    }
+
+    protected static function buildXml($element, $data): void
+    {
+        if (is_array($data)) {
+            foreach ($data as $name => $value) {
+                if (is_int($name) ) {
+                    static::buildXml($element, $value);
+                } elseif (is_array($value) ) {
+                    $child = new \DOMElement($name);
+                    $element->appendChild($child);
+                    static::buildXml($child, $value);
+                } else {
+                    $child = new \DOMElement($name);
+                    $element->appendChild($child);
+                    $child->appendChild(new \DOMText(is_string($value)?$value:json_encode($value)));
+                }
+            }
+        } else {
+            var_dump($data);
+            $element->appendChild(new \DOMText(is_string($data)?$data:json_encode($data)));
+        }
+    }
+    
 }
