@@ -50,18 +50,7 @@ class UserModel extends BaseModel
     }
 }
 /*
-    public function hash(string $password): string
-    {
-        return password_hash($password, $this->algorithm, $this->parameters);
-    }
-    public function __construct(string $login, string $password)
-    {
-        $this->login = $login;
-        $this->created_at = new DateTimeImmutable();
-        $this->updated_at = new DateTimeImmutable();
-        $this->setPassword($password);
-        $this->resetToken();
-        
+
     public function validate(string $password, string $hash): bool
     {
         if ($password === '') {

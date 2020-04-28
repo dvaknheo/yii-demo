@@ -15,38 +15,32 @@ class SessionService extends BaseService
     {
         App::session_start();
     }
-    public function getCurrentUser()
-    {
-        $user = isset($_SESSION['user'])?$_SESSION['user']:[];
-        return $user;
-    }
     public function getCurrentUid()
     {
-        $user = isset($_SESSION['user'])?$_SESSION['user']:[];
-        return $user['id']??null;
+        return $_SESSION['__auth_id']??null;
     }
-    public function setCurrentUser($user)
+    public function setCurrentUser($uid)
     {
-        $_SESSION['user'] = $user;
+        $_SESSION['__auth_id'] = $uid;
     }
     public function logout()
     {
-        App::SG()->_SESSION['user']=null;
-        unset(App::SG()->_SESSION['user']);
+        App::SG()->_SESSION['__auth_id']=null;
+        unset(App::SG()->_SESSION['__auth_id']);
     }
     public function csrf_check($token)
     {
-        return isset($_SESSION['_CSRF']) && $_SESSION['_CSRF'] === $token?true:false;
+        return isset($_SESSION['csrf']) && $_SESSION['csrf'] === $token?true:false;
     }
     
     ////////////////////////////////////////////////////////////////////////
     public function csrf_token()
     {
-        if(!isset(App::SG()->_SESSION['_token'])){
+        //if(!isset(App::SG()->_SESSION['csrf'])){
             $token=$this->randomString(40);
-            App::SG()->_SESSION['_token']=$token;
-        }
-        return App::SG()->_SESSION['_token'];
+            App::SG()->_SESSION['csrf']=$token;
+        //}
+        return App::SG()->_SESSION['csrf'];
     }
     public function csrf_field()
     {
