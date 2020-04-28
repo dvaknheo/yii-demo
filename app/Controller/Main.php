@@ -95,8 +95,10 @@ class Main
     }
     public function test1()
     {
-        
-        C::Show(get_defined_vars(),'site/index');
+        $x=UserService::G()->create('b00001','123456');
+        var_dump($x);
+        var_dump(date(DATE_ATOM));
+        //C::Show(get_defined_vars(),'site/index');
     }
     public function test2()
     {

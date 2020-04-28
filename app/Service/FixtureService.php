@@ -54,7 +54,7 @@ class FixtureService extends BaseService
     {
         for ($i = 0; $i <= $count; ++$i) {
             $login = $this->faker->firstName . rand(0, 9999);
-            $user = new User($login, $login);
+            $user=UserModel::create($login,$login);
             $this->users[] = $user;
         }
     }
@@ -74,13 +74,9 @@ class FixtureService extends BaseService
             }
             $tagWords[] = $word;
         }
-        
-        /** @var TagRepository $tagRepository */
-        $tagRepository = $this->getORM()->getRepository(Tag::class);
-        $this->tags = [];
-        
+        ////
         foreach ($tagWords as $word) {
-            $tag = $tagRepository->getOrCreate($word);
+            $tag = $this->getOrCreateTag($word);
             $this->tags[] = $tag;
         }
     }
@@ -92,38 +88,47 @@ class FixtureService extends BaseService
         }
         for ($i = 0; $i <= $count; ++$i) {
             /** @var User $postUser */
-            $postUser = $this->users[array_rand($this->users)];
+            $user_id = $this->users[array_rand($this->users)];
             //
-            
+            $post_id=$this->addPost($user_id);
+            if(!$post_id){
+                
+            }
             $postTags = (array)array_rand($this->tags, rand(1, count($this->tags)));
             foreach ($postTags as $tagId) {
-                //
-
+                $this->addPostTag($post_id,$tag_id);
             }
             $commentsCount = rand(0, $count);
             for ($j = 0; $j <= $commentsCount; ++$j) {
-                //
+                $comment_user_id = $this->users[array_rand($this->users)];
+                $this->addComment($comment_user_id,$post_id);
             }
         }
     }
         
-    protected function addOrSetTag()
+    protected function getOrCreateTag($word)
     {
-        // SELECT `tag`.`id` AS `c0`, `tag`.`label` AS `c1`, `tag`.`created_at` AS `c2` FROM `tag` AS `tag` WHERE `tag`.`label` = 'minima' LIMIT 1
+        $sql="select id from tag where label=?";
+        $id=M::DB()->fetchColmn($sql,$word);
+        if(!empty($id)){
+            return $id;
+        }
+        $created_at = (new \DateTimeImmutable()).format('Y-m-d H:i:s');
+        $sql="insert into tag (`label`, `created_at`) VALUES (?,?)";
+        M::DB()->execute($sql,$word,$created_at);
+        
+        return M::DB()->lastInsertId();
     }
-    protected function addUser()
-    {
-        //INSERT INTO `user` (`token`, `login`, `password_hash`, `created_at`, `updated_at`) 
-    }
+
     protected function addPost($user_id)
     {
         $title=$this->faker->text(64);
         $content=$this->faker->realText(rand(1000, 4000));
 
         $public = (rand(0, 3) > 0)?true:false;
-        $published_at = $public?''.new \DateTimeImmutable(date('r', rand(time(), strtotime('-2 years')))):null;
-        $created_at = ''.new DateTimeImmutable();
-        $updated_at = ''.new DateTimeImmutable();
+        $published_at = $public?(new \DateTimeImmutable(date('r', rand(time(), strtotime('-2 years'))))).format('Y-m-d H:i:s'):null;
+        $created_at = (new \DateTimeImmutable()).format('Y-m-d H:i:s');
+        $updated_at = (new \DateTimeImmutable()).format('Y-m-d H:i:s');
         $data=[
             'slug'=>$slug,
             'title'=>$title,
@@ -149,9 +154,9 @@ class FixtureService extends BaseService
     {
         $content= $this->faker->realText(rand(100, 500));
         $public = (rand(0, 3) > 0)?true:false;
-        $published_at = $public?''.new \DateTimeImmutable(date('r', rand(time(), strtotime('-1 years')))):null;
-        $created_at = ''.new DateTimeImmutable();
-        $updated_at = ''.new DateTimeImmutable();
+        $published_at = $public?(new \DateTimeImmutable(date('r', rand(time(), strtotime('-1 years'))))).format('Y-m-d H:i:s'):null;
+        $created_at = (new \DateTimeImmutable()).format('Y-m-d H:i:s');
+        $updated_at = (new \DateTimeImmutable()).format('Y-m-d H:i:s');
         $data=[
             'public'=>$public,
             'content'=>$content,

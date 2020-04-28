@@ -8,6 +8,8 @@ namespace MY\Model;
 use MY\Base\BaseModel;
 use MY\Base\Helper\ModelHelper as M;
 
+use Yiisoft\Security\Random;
+
 class UserModel extends BaseModel
 {
     public static function findByLogin($login)
@@ -31,8 +33,41 @@ class UserModel extends BaseModel
         return $data;
     }
     ////
-    public function create($login,$password)
+    public static function create($login,$password)
     {
-        //
+        $date= date('Y-m-d H:i:s');// new \DateTimeImmutable();
+        $hash=password_hash($password,PASSWORD_BCRYPT,['cost'=>13]); // do not complex;
+        $token=Random::string(128);
+        $data=[
+            'login'=>$login,
+            'token'=>$token,
+            'password_hash'=>$hash,
+            'created_at'=>$date,
+            'updated_at'=>$date,
+        ];
+        M::DB()->insertData('user',$data);
+        return M::DB()->lastInsertId();
     }
 }
+/*
+    public function hash(string $password): string
+    {
+        return password_hash($password, $this->algorithm, $this->parameters);
+    }
+    public function __construct(string $login, string $password)
+    {
+        $this->login = $login;
+        $this->created_at = new DateTimeImmutable();
+        $this->updated_at = new DateTimeImmutable();
+        $this->setPassword($password);
+        $this->resetToken();
+        
+    public function validate(string $password, string $hash): bool
+    {
+        if ($password === '') {
+            throw new \InvalidArgumentException('Password must be a string and cannot be empty.');
+        }
+
+        return password_verify($password, $hash);
+    }
+*/
