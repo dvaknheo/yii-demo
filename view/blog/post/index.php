@@ -9,68 +9,53 @@
 use Yiisoft\Html\Html;
 
 ?>
-<h1><?php echo Html::encode($item->getTitle()) ?></h1>
+<h1><?=_h($post['title'] ?></h1>
 <div>
-    <span class="text-muted"><?php echo $item->getPublishedAt()->format('H:i:s d.m.Y') ?> by</span>
-    <?php
-    echo Html::a(
-    Html::encode($item->getUser()->getLogin()),
-    V::URL('user/profile', ['login' => $item->getUser()->getLogin()])
-);
-    ?>
-</div>
-<?php
-
-echo Html::tag('article', Html::encode($item->getContent()), ['class' => 'text-justify']);
-
-if ($item->getTags()->count()) {
-    echo Html::beginTag('div', ['class' => 'mt-3']);
-    foreach ($item->getTags() as $tag) {
-        echo Html::a(
-            Html::encode($tag->getLabel()),
-            V::URL('blog/tag', ['label' => $tag->getLabel()]),
-            ['class' => 'btn btn-outline-secondary btn-sm m-1']
-        );
-    }
-    echo Html::endTag('div');
+    <span class="text-muted"><?=$post['date_published_at']?> by</span>
+    <a href="/user/<?=$post['login']?>"><?=$post['login']?></a></div>
+<article class="text-justify"><?=_h($post['content'])?></article><?php
+if (!empty($tags)) {
+?><div class="mt-3"><?php
 }
-
-echo Html::tag('h2', 'Comments', ['class' => 'mt-4 text-muted']);
-echo Html::beginTag('div', ['class' => 'mt-3']);
-if ($item->getComments()->count()) {
-    foreach ($item->getComments() as $comment) {
-        ?>
+foreach ($tags as $v) {
+    ?><a class="btn btn-outline-secondary btn-sm m-1" href="/blog/tag/<?=$v['label']?>"><?=_h($v['label'])?></a><?
+if (!empty($tags)) {
+?></div><?php
+}
+?>
+<h2 class="mt-4 text-muted">Comments</h2><div class="mt-3"><?php
+    foreach ($comments as $v) {
+?>
         <div class="media mt-4 shadow p-3 rounded">
             <div class="media-body">
                 <div>
-                    <?php echo Html::a(
-            Html::encode($comment->getUser()->getLogin()),
-            V::URL('user/profile', ['login' => $comment->getUser()->getLogin()])
-        ) ?>
+                    <a href="/user/<?=$v['login']?>"><?=$v['login']?></a>
                     <span class="text-muted">
-                        <i>created at</i> <?php echo $comment->getCreatedAt()->format('H:i d.m.Y') ?>
+                        <i>created at</i> <?=$v['date_created_at'] ?>
                     </span>
-                    <?php if ($comment->isPublic()) { ?>
+                    <?php
+                    if ($v['is_public']) { ?>
                         <span class="text-muted">
-                            <i>published at</i> <?php echo $comment->getPublishedAt()->format('d.m.Y') ?>
+                            <i>published at</i> <?=$v['date_publish_at'] ?>
                         </span>
-                    <?php } ?>
-                    <span><?php echo $comment->isPublic()
-                            ? ''
-                            : Html::tag(
-                                'span',
-                                'hidden',
-                                ['class' => 'border border-info rounded px-2 text-muted']
-                            ) ?></span>
+                    <?php
+                    }
+?>
+                    <span><?php
+                    if (!$v['is_public']) { 
+                        ?><span class="border border-info rounded px-2 text-muted">hidden</span>
+<?php
+                    }
+                    ?></span>
                 </div>
                 <div class="mt-1 text-justify">
-                    <?php echo Html::encode($comment->getContent()) ?>
+                    <?=_h($v['content']) ?>
                 </div>
             </div>
         </div>
         <?php
     }
-} else {
-    echo Html::tag('p', 'No comments', ['class' => 'lead']);
-}
-echo Html::endTag('div');
+    if(empty($comments)){
+        ?><p class="lead">No comments</p><?php
+    }
+?></div>

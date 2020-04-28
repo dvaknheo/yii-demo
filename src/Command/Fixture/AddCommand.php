@@ -10,7 +10,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Cycle\Command\CycleDependencyPromise;
 
-use App\Service\FixtureService;
+use DuckPhp\App;
+use MY\Service\FixtureService;
 
 use Faker\Factory;
 
@@ -28,7 +29,18 @@ class AddCommand extends Command
         parent::__construct();
         FixtureService::SetPromise($promise);
     }
-
+    private function initDuckPhp()
+    {
+        //*
+        $path = realpath(__DIR__.'/../../..');
+        $options=[];
+        $options['path'] = $path;
+        $options['handle_all_exception']=false;
+        $options['handle_all_dev_error']=false;
+        
+        DuckPhp\App::init($options);
+    }
+    
     public function configure(): void
     {
         $this

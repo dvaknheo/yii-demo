@@ -88,8 +88,6 @@ class BlogService extends BaseService
             'year' => $year,
             'month' => $month,
             'paginator' => $paginator,
-            'archive' => $archive,
-            'tags' => $tags,
         ];
         return $data;
     }

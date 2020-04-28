@@ -8,6 +8,8 @@
 
 use Yiisoft\Html\Html;
 
+use MY\Base\Helper\AppHelper as A;
+A::OBStart();
 ?>
 <h1><?php echo Html::encode($item->getTitle()) ?></h1>
 <div>
@@ -74,3 +76,4 @@ if ($item->getComments()->count()) {
     echo Html::tag('p', 'No comments', ['class' => 'lead']);
 }
 echo Html::endTag('div');
+A::OBEnd(__FILE__);

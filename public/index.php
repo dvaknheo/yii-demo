@@ -31,9 +31,7 @@ $options['path'] = $path;
 $options['handle_all_exception']=false;
 $options['handle_all_dev_error']=false;
 
-
-\DuckPhp\App::G()->init($options);
-$flag = \DuckPhp\App::G()->run();
+$flag = \DuckPhp\App::RunQuickly($options);
 if($flag){
     return;
 }

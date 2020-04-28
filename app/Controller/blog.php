@@ -27,16 +27,16 @@ class blog
         
         C::Show($data,'blog/index');
     }
-    public function post()
+    public function postx()
     {
         $slug = $this->getAttribute('slug', null);
-        $item = BlogService::G()->getPostData($slug);
-        if ($item === null) {
+        $data = BlogService::G()->getPostData($slug);
+        if ($data === null) {
             C::Exit404();
             return;
         }
         
-        C::Show(['item' => $item],'blog/post/index');
+        C::Show($data,'blog/post/index');
     }
     public function tag()
     {

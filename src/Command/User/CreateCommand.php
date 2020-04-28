@@ -12,7 +12,7 @@ use Yiisoft\Yii\Cycle\Command\CycleDependencyPromise;
 use Faker\Factory;
 
 use DuckPhp\App;
-use App\Service\UserService;
+use MY\Service\UserService;
 
 class CreateCommand extends Command
 {
@@ -22,11 +22,22 @@ class CreateCommand extends Command
 
     public function __construct(CycleDependencyPromise $promise)
     {
+        $this->initDuckPhp();
         $this->promise = $promise;
         parent::__construct();
         UserService::SetPromise($promise);
     }
-
+    private function initDuckPhp()
+    {
+        //*
+        $path = realpath(__DIR__.'/../../..');
+        $options=[];
+        $options['path'] = $path;
+        $options['handle_all_exception']=false;
+        $options['handle_all_dev_error']=false;
+        
+        DuckPhp\App::init($options);
+    }
 
     public function configure(): void
     {

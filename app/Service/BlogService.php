@@ -35,16 +35,79 @@ class BlogService extends BaseService
         
         $data = [
             'paginator' => $paginator,
-            'archive' => $archive,
-            'tags' => $tags,
+            'tags' => $this->getTags(),
+            'archive' => $this->getArchives(),
         ];
         return $data;
     }
+    private function getData()
+    {
+/*
+2020-04-28 14:39:29.553000 [info][application] SELECT COUNT(DISTINCT(`post`.`id`))
+FROM `post` AS `post`
+WHERE `post`.`public` = TRUE 
+2020-04-28 14:39:29.587200 [info][application] SELECT `post`.`id` AS `c0`, `post`.`slug` AS `c1`, `post`.`title` AS `c2`, `post`.`public` AS `c3`, `post`.`content` AS `c4`, `post`.`created_at` AS `c5`, `post`.`updated_at` AS `c6`,
+`post`.`published_at` AS `c7`, `post`.`deleted_at` AS `c8`, `post`.`user_id` AS `c9`
+FROM `post` AS `post`
+WHERE `post`.`public` = TRUE 
+ORDER BY `post`.`published_at` DESC
+LIMIT 3 OFFSET 0
+2020-04-28 14:39:29.587600 [info][application] SELECT `post_user`.`id` AS `c0`, `post_user`.`token` AS `c1`, `post_user`.`login` AS `c2`, `post_user`.`password_hash` AS `c3`, `post_user`.`created_at` AS `c4`, `post_user`.`updated_at`
+AS `c5`
+FROM `user` AS `post_user`
+WHERE `post_user`.`id` IN (5 ,31 ,29) 
+2020-04-28 14:39:29.589100 [info][application] SELECT `l_post_tags_pivot`.`id` AS `c0`, `l_post_tags_pivot`.`post_id` AS `c1`, `l_post_tags_pivot`.`tag_id` AS `c2`, `post_tags`.`id` AS `c3`, `post_tags`.`label` AS `c4`,
+`post_tags`.`created_at` AS `c5`
+FROM `tag` AS `post_tags` 
+INNER JOIN `post_tag` AS `l_post_tags_pivot`
+    ON `l_post_tags_pivot`.`tag_id` = `post_tags`.`id`  
+WHERE `l_post_tags_pivot`.`post_id` IN (2 ,20 ,18) 
+//*/
+    }
+    private function getTags()
+    {
+        $sql="SELECT `label`, count(*) `count`
+FROM `tag` AS `tag` 
+INNER JOIN `post_tag` AS `tag_posts_pivot`
+    ON `tag_posts_pivot`.`tag_id` = `tag`.`id` 
+INNER JOIN `post` AS `tag_posts`
+    ON `tag_posts`.`id` = `tag_posts_pivot`.`post_id` AND `tag_posts`.`public` = TRUE  
+GROUP BY `tag_posts_pivot`.`tag_id` 
+ORDER BY `count` DESC
+LIMIT 10";
+        return M::DB()->fetchAll($sql);
+    }
+    private function getArchives()
+    {
+    $sql="SELECT count(`post`.`id`) `count`, extract(month from post.published_at) month, extract(year from post.published_at) year
+FROM `post` AS `post`
+WHERE `post`.`public` = TRUE 
+GROUP BY `year`, `month` 
+ORDER BY `year` DESC, `month` DESC
+LIMIT 12";
+        return M::DB()->fetchAll($sql);
+    }
     public function getPostData($slug)
     {
-        $postRepo = $this->getORM()->getRepository(Post::class);
-        $item = $postRepo->fullPostPage($slug);
-        
+        $sql="SELECT *
+FROM `post` AS `post` 
+LEFT JOIN `user` AS `l_post_user`
+    ON `l_post_user`.`id` = `post`.`user_id`  
+WHERE `post`.`slug` = ? AND `post`.`public` = TRUE ";
+        $item=M::DB()->fetch($sql,$label);
+    $sql="SELECT *
+FROM `tag` AS `post_tags` 
+INNER JOIN `post_tag` AS `l_post_tags_pivot`
+    ON `l_post_tags_pivot`.`tag_id` = `post_tags`.`id`  
+WHERE `l_post_tags_pivot`.`post_id` IN (?)";
+        $item=M::DB()->fetchAll($sql,$post['id']);
+    $sql="SELECT *
+FROM `comment` AS `post_comments` 
+LEFT JOIN `user` AS `post_comments_user`
+    ON `post_comments_user`.`id` = `post_comments`.`user_id`  
+WHERE `post_comments`.`post_id` IN (?) AND `post_comments`.`public` = TRUE 
+ORDER BY `post_comments`.`published_at` DESC";
+        $item=M::DB()->fetchAll($sql,$post['id']);
         return $item;
     }
     public function getTagData($label, $pageNum)
@@ -88,13 +151,26 @@ ORDER BY `year` DESC, `month` DESC";
     }
     public function getArchiveDataMonthly($year,$month,$pageNum)
     {
-        $archiveRepo=$this->getObject(ArchiveRepository::class);
-        $dataReader = $archiveRepo->getMonthlyArchive($year, $month);
-        
-        $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(self::POSTS_PER_PAGE)
-            ->withCurrentPage($pageNum);
-            
+/*
+FROM `post` AS `post`
+WHERE `post`.`published_at` BETWEEN '2019-09-01T00:00:00+08:00' AND '2019-09-30T23:59:59+08:00' AND `post`.`public` = TRUE 
+2020-04-28 15:00:45.666100 [info][application] SELECT `post`.`id` AS `c0`, `post`.`slug` AS `c1`, `post`.`title` AS `c2`, `post`.`public` AS `c3`, `post`.`content` AS `c4`, `post`.`created_at` AS `c5`, `post`.`updated_at` AS `c6`,
+`post`.`published_at` AS `c7`, `post`.`deleted_at` AS `c8`, `post`.`user_id` AS `c9`
+FROM `post` AS `post`
+WHERE `post`.`published_at` BETWEEN '2019-09-01T00:00:00+08:00' AND '2019-09-30T23:59:59+08:00' AND `post`.`public` = TRUE 
+ORDER BY `post`.`published_at` DESC
+LIMIT 3 OFFSET 0
+2020-04-28 15:00:45.666500 [info][application] SELECT `post_user`.`id` AS `c0`, `post_user`.`token` AS `c1`, `post_user`.`login` AS `c2`, `post_user`.`password_hash` AS `c3`, `post_user`.`created_at` AS `c4`, `post_user`.`updated_at`
+AS `c5`
+FROM `user` AS `post_user`
+WHERE `post_user`.`id` IN (3 ,2 ,10) 
+2020-04-28 15:00:45.666800 [info][application] SELECT `l_post_tags_pivot`.`id` AS `c0`, `l_post_tags_pivot`.`post_id` AS `c1`, `l_post_tags_pivot`.`tag_id` AS `c2`, `post_tags`.`id` AS `c3`, `post_tags`.`label` AS `c4`,
+`post_tags`.`created_at` AS `c5`
+FROM `tag` AS `post_tags` 
+INNER JOIN `post_tag` AS `l_post_tags_pivot`
+    ON `l_post_tags_pivot`.`tag_id` = `post_tags`.`id`  
+WHERE `l_post_tags_pivot`.`post_id` IN (1 ,4 ,6) 
+*/
         $archive = $archiveRepo->getFullArchive()->withLimit(12);
         $tags = $this->getORM()->getRepository(Tag::class)->getTagMentions(self::POPULAR_TAGS_COUNT);
         
@@ -102,8 +178,7 @@ ORDER BY `year` DESC, `month` DESC";
             'year' => $year,
             'month' => $month,
             'paginator' => $paginator,
-            'archive' => $archive,
-            'tags' => $tags,
+
         ];
         return $data;
     }

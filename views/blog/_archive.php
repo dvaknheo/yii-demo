@@ -7,11 +7,14 @@
  */
 
 use Yiisoft\Html\Html;
+use MY\Base\Helper\AppHelper as A;
 
 ?>
 <h4 class="text-muted mb-3">Archive</h4>
 <ul class="list-group mb-3">
     <?php
+A::OBStart();
+
     $currentYear = null;
     $blockBegin = Html::beginTag(
         'li',
@@ -46,5 +49,7 @@ use Yiisoft\Html\Html;
     } else {
         echo $blockBegin, 'No records', $blockEnd;
     }
+A::OBEnd(__FILE__);
+
     ?>
 </ul>
