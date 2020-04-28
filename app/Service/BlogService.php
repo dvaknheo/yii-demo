@@ -74,7 +74,13 @@ class BlogService extends BaseService
     }
     public function getArchiveData()
     {
-        return $this->getObject(ArchiveRepository::class)->getFullArchive();
+        $sql="SELECT count(`post`.`id`) `count`, extract(month from post.published_at) month, extract(year from post.published_at) year
+FROM `post` AS `post`
+WHERE `post`.`public` = TRUE 
+GROUP BY `year`, `month` 
+ORDER BY `year` DESC, `month` DESC";
+        $data=M::DB()->fetchAll($sql);
+        return $data;
     }
     public function getArchiveDataMonthly($year,$month,$pageNum)
     {

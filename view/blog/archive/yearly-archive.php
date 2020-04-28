@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-sm-8 col-md-8 col-lg-9">
 <?php
-    if(true){ 
+    if(!empty(items)){ 
 ?>
         <p class="text-muted">Total 12 posts</p><?php
     }else{
