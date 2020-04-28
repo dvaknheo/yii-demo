@@ -21,4 +21,11 @@ class ModelHelper extends Helper
         $sql=preg_replace_callback('/^\s*select(.*?)\sfrom\s/is',function($m){return 'SELECT COUNT(*) as c FROM ';},$sql);
         return $sql;
     }
+    public static function QuicklyGetPageData($sql, $pageNo, $pageSize,...$args)
+    {
+        $total=static::DB()->fetchColumn(static::SqlForCountSimply($sql),...$args);
+        $sql=static::SqlForPage($sql, $pageNo, $pageSize);
+        $list=static::DB()->fetchAll($sql,...$args);
+        return [$total,$list];
+    }
 }

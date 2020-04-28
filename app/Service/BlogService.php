@@ -49,28 +49,32 @@ class BlogService extends BaseService
     }
     public function getTagData($label, $pageNum)
     {
-        $data = [
+        $ret = [
             'item' => null,
-            'paginator' => null,
         ];
-        
-        $item = $this->getORM()->getRepository(Tag::class)->findByLabel($label);
-        if ($item === null) {
-            return $data;
+        $sql="select * from tag where label=?";
+        $item=M::DB()->fetch($sql,$label);
+        if(!$item){
+            return $ret;
         }
-
-        /** @var PostRepository $postRepo */
-        $postRepo = $this->getORM()->getRepository(Post::class);
-        // preloading of posts
-        $paginator = (new OffsetPaginator($postRepo->findByTag($item->getId())))
-            ->withPageSize(self::POSTS_PER_PAGE)
-            ->withCurrentPage($pageNum);
-
-        $data = [
-            'item' => $item,
-            'paginator' => $paginator,
-        ];
-        return $data;
+        $ret['item']=$item;
+        $sql="SELECT *
+FROM `post` AS `post` 
+INNER JOIN `post_tag` AS `post_tags_pivot`
+    ON `post_tags_pivot`.`post_id` = `post`.`id` 
+INNER JOIN `tag` AS `post_tags`
+    ON `post_tags`.`id` = `post_tags_pivot`.`tag_id` 
+LEFT JOIN `user` AS `l_post_user`
+    ON `l_post_user`.`id` = `post`.`user_id`  
+WHERE `post_tags`.`id` = ? AND `post`.`public` = TRUE ";
+        list($total,$list)=M::QuicklyGetPageData($sql,$pageNum,3,$item['id']);
+        foreach($list as &$v){
+            $v['date_published_at']=date('H:i d.m.Y',strtotime($v['published_at']));
+        }
+        $ret['total']=$total;
+        $ret['list']=$list;
+        
+        return $ret;
     }
     public function getArchiveData()
     {

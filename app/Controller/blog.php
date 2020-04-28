@@ -44,10 +44,9 @@ class blog
         $pageNum = (int)$this->getAttribute('page', 1);
         $data =  BlogService::G()->getTagData($label, $pageNum);
         if ($data['item'] === null) {
-            C::Show404();
+            C::Exit404();
             return;
         }
-        
         C::Show($data,'blog/tag/index');
     }
     public function archive()
