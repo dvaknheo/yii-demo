@@ -8,6 +8,7 @@ namespace MY\Service;
 
 use MY\Base\BaseService;
 use MY\Base\Helper\ServiceHelper as S;
+use MY\Base\Helper\ModelHelper as M;
 
 use App\Blog\Entity\Post;
 use App\Blog\Entity\Tag;
@@ -98,6 +99,28 @@ class BlogService extends BaseService
     }
     public function getArchiveDataYearly($year)
     {
-        return  $this->getObject(ArchiveRepository::class)->getYearlyArchive($year);
+        $begin = (new \DateTimeImmutable())->setDate($year, 1, 1)->setTime(0, 0, 0);
+        $end = $begin->setDate($year + 1, 1, 1)->setTime(0, 0, -1);
+        $begin=$begin->format('Y-m-d H:i:s O');
+        $end=$end->format('Y-m-d H:i:s O');
+        
+        $sql="SELECT post.*,l_post_user.login
+FROM `post` AS `post` 
+LEFT JOIN `user` AS `l_post_user`
+    ON `l_post_user`.`id` = `post`.`user_id`  
+WHERE `post`.`published_at` BETWEEN ? AND ? AND `post`.`public` = TRUE 
+ORDER BY `post`.`published_at` ASC";
+        $data=M::DB()->fetchAll($sql,$begin,$end);
+        
+        $ret=[];
+        foreach($data as $k=>$v){
+            $ret[$k]['month'] = date('m',strtotime($v['published_at']));
+            $ret[$k]['monthName'] = \DateTime::createFromFormat('!m', $ret[$k]['month'])->format('F');
+            $ret[$k]['login'] = $v['login'];
+            $ret[$k]['title'] = $v['title'];
+            $ret[$k]['slug'] = $v['slug'];
+        }
+        return $ret;
+
     }
 }

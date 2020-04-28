@@ -12,6 +12,7 @@ class blog
 {
     public function __construct()
     {
+        C::setViewWrapper('layout/head','layout/foot');
     }
     protected function getAttribute($key,$default)
     {

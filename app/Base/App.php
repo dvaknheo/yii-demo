@@ -10,8 +10,6 @@ use DuckPhp\Core\Route;
 
 use MY\Base\Helper\ControllerHelper as C;
 
-use MY\Controller\blog;
-
 class App extends DuckPhp_App
 {
     protected $isExited=false;
@@ -32,13 +30,15 @@ class App extends DuckPhp_App
     {
         $this->options['path_config'] = 'app/config';
         static::Pager(BasePager::G());
-        $controller = blog::class;
 
         $this->options['route_map_important']=[
             '~^user(/page-(?<page>\d+))?$'      => '#user->index',
             '~^user/(?<login>\w+)$'             => '#user->profile',
 
-            '~^api/user/(?<login>\w+)$' => "#api@profile",
+            '~^api/user/(?<login>\w+)$'         => "#api@profile",
+            
+            '~^blog/archive/(?<year>\d+)$'      =>"#blog@archive_yearly",
+            
             /*
             //'/blog'                             =>"#blog@index",
             
@@ -47,7 +47,6 @@ class App extends DuckPhp_App
             '~^blog/page/(?<slug>\w+)$'                                         =>"#blog@post",
             '~^blog/tag/(?<label>\w+)(/page(?<page>\d+))?$'                     =>"#blog@tag",
             '/blog/archive'                                                     =>"#blog@archive",
-            '^blog/archive/(?<year>\d+)$'                                       =>"#blog@archive_yearly",
             '~^blog/archive/(?<year>\d+)-(?<month>\d+)(/page(?<page>\d+))?$'    =>"#blog@archive_monthly",
             //*/
         ];

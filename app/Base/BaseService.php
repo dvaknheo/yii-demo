@@ -13,19 +13,4 @@ use Cycle\ORM\ORMInterface;
 class BaseService
 {
     use SingletonEx;
-    
-    public function getORM()
-    {
-        $container=App::G()->container;
-        $promise=App::G()->promise;
-        if(!empty($promise)){
-            return $promise->getORM();
-        }
-        return $container->get(ORMInterface::class);
-    }
-    public function getObject($class)
-    {
-        $container=App::G()->container;
-        return $container->get($class);
-    }
 }
