@@ -41,14 +41,7 @@ class App extends DuckPhp_App
             '~^blog/archive/(?<year>\d+)-(?<month>\d+)(/page(?<page>\d+))?$'    =>"#blog@archive_monthly",
             '~^blog/tag/(?<label>\w+)(/page(?<page>\d+))?$'                     =>"#blog@tag",
             '~^blog/page/(?<slug>\w+)$'                                         =>"#blog@post",
-
-            /*
-            //'/blog'                             =>"#blog@index",
-            
-            '/blog'                                                             =>"#blog@index",
             '~^blog(/(?<id>\d+))?$'                                              =>"#blog@index",
-            '/blog/archive'                                                     =>"#blog@archive",
-            //*/
         ];
         foreach($this->options['route_map_important'] as &$v){
             $v=str_replace('#','MY\\Controller\\',$v);

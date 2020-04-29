@@ -24,10 +24,9 @@ class blog
         $pageNum = (int)$this->getAttribute('page', 1);
         
         $data = BlogService::G()->getDataToIndex($pageNum);
-        
         C::Show($data,'blog/index');
     }
-    public function postx()
+    public function post()
     {
         $slug = $this->getAttribute('slug', null);
         $data = BlogService::G()->getPostData($slug);

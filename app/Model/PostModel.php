@@ -10,8 +10,8 @@ use MY\Base\Helper\ModelHelper as M;
 
 class PostModel extends BaseModel
 {
-    public function foo()
+    public static function get()
     {
-        return DATE(DATE_ATOM);
     }
+    
 }

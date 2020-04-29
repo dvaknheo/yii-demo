@@ -1,22 +1,14 @@
 <?php
 
+use MY\Base\Helper\ViewHelper as V;
 use Yiisoft\Yii\Bootstrap4\Nav;
 use Yiisoft\Yii\Bootstrap4\NavBar;
-use MY\Base\Helper\ViewHelper as V;
 
 $login="???";
 $user_id=null;
 
-$t=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
-$currentUrl='';
+$currentUrl=''; // ??
 NavBar::counter(0);
-if($t==='/'){
-    NavBar::counter(1);
-}
-if($t==='/user'){
-    NavBar::counter(1);
-}
-NavBar::counter(1);
 ?><!DOCTYPE html>
 <html lang="">
 <head>
@@ -57,3 +49,4 @@ echo Nav::widget()
 echo NavBar::end();
 
 ?><main role="main" class="container py-4"><?php
+NavBar::counter(1);

@@ -16,17 +16,58 @@ class BlogService extends BaseService
     private const POPULAR_TAGS_COUNT = 10;
     private const ARCHIVE_MONTHS_COUNT = 12;
     
-    public function getDataToIndex($pageNum = 1)
+    public function getDataToIndex($pageNum = 1,$pageSize=self::POSTS_PER_PAGE)
     {
-        $postRepo = $this->getORM()->getRepository(Post::class);
-        $dataReader = $postRepo->findAllPreloaded();
-        $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(self::POSTS_PER_PAGE)
-            ->withCurrentPage($pageNum);
-
+$sql="SELECT *
+FROM `post` AS `post`
+WHERE `post`.`public` = TRUE ORDER BY `post`.`published_at` DESC
+";
+        $sql_total=M::SqlForCountSimply($sql);
+        $sql_page=M::SqlForPage($sql, $pageNum, $pageSize);
+        $total=M::DB()->fetchColumn($sql_total);
+        $list=M::DB()->fetchAll($sql_page);
+        
+        if(empty($list)){
+            $data = [
+                'total'=> 0,
+                'list' => [],
+                'tags' => $this->getTags(),
+                'archive' => $this->getArchives(),
+            ];
+            return $data;
+        }
+        $sql="SELECT *
+FROM `user` AS `post_user`
+WHERE `post_user`.`id` IN (%s)";
+        $ids=implode(',',array_column($list,'user_id'));
+        
+        $data=M::DB()->fetchAll(sprintf($sql,$ids));
+        foreach($data as $v){
+            $users[$v['id']]=$v;
+        }
+        $sql="SELECT *
+FROM `tag` AS `post_tags` 
+INNER JOIN `post_tag` AS `l_post_tags_pivot`
+    ON `l_post_tags_pivot`.`tag_id` = `post_tags`.`id`  
+WHERE `l_post_tags_pivot`.`post_id` IN (%s)";
+        $ids=implode(',',array_column($list,'id'));
+        $data=M::DB()->fetchAll(sprintf($sql,$ids));
+        
+        $tags=[];
+        foreach($data as $v){
+            $tags[$v['post_id']]=$tags[$v['post_id']]??[];
+            $tags[$v['post_id']][]=$v;
+        }
+        foreach($list as &$v){
+            $v['user']=$users[$v['user_id']]??[];
+            $v['tags']=$tags[$v['id']]??[];
+            $v['content_short']=mb_substr($v['content'], 0, 400). (mb_strlen($v['content']) > 400 ? '…' : '');
+            $v['month_published_at']=date('M, d',strtotime($v['published_at']));
+        }
         
         $data = [
-            'paginator' => $paginator,
+            'total'=> $total,
+            'list' => $list,
             'tags' => $this->getTags(),
             'archive' => $this->getArchives(),
         ];
@@ -150,7 +191,8 @@ ORDER BY `year` DESC, `month` DESC";
         
         $sql="SELECT *
 FROM `post` AS `post`
-WHERE `post`.`published_at` BETWEEN ? AND ? AND `post`.`public` = TRUE";
+WHERE `post`.`published_at` BETWEEN ? AND ? AND `post`.`public` = TRUE
+ORDER BY `post`.`published_at` DESC";
         $sql_total=M::SqlForCountSimply($sql,$begin,$end);
         $sql_page=M::SqlForPage($sql, $pageNum, $pageSize);
         $total=M::DB()->fetchColumn($sql_total,$begin,$end);
