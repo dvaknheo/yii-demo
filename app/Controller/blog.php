@@ -24,6 +24,10 @@ class blog
         $pageNum = (int)$this->getAttribute('page', 1);
         
         $data = BlogService::G()->getDataToIndex($pageNum);
+        
+                C::PageExt('/blog/page{page}',$pageNum);
+        $data['pagehtml']=C::PageHtml($data['total']);
+        
         C::Show($data,'blog/index');
     }
     public function post()
@@ -72,7 +76,7 @@ class blog
         $month = (int)$this->getAttribute('month', null);
         
         list($total,$list) = BlogService::G()->getArchiveDataMonthly($year,$month,$pageNum);
-        C::PageExt('/user/page-{page}',$pageNum);
+        C::PageExt('/archive/bad/??-{page}',$pageNum);
         $pagehtml=C::PageHtml($total);
         
         

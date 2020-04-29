@@ -19,16 +19,20 @@ class App extends DuckPhp_App
         require_once(__DIR__.'/functions.php');
         parent::__construct();
         
-        $this->options['skip_exception_check'] = true; 
+        //$this->options['skip_exception_check'] = true;   the default exception view no show error file ...
         $this->options['use_short_functions'] = true; 
         
         $this->options['skip_404_handler'] = true;
         $this->options['is_debug'] = true;
         $this->options['error_404']=function(){};
+        
+        $this->options['path_config'] = realpath(__DIR__.'/../config');
+        $this->options['path_view'] = realpath(__DIR__.'/../view');
+        
     }
     public function onInit()
     {
-        $this->options['path_config'] = 'app/config';
+        
         static::Pager(BasePager::G());
 
         $this->options['route_map_important']=[
