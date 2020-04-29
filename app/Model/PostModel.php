@@ -10,8 +10,15 @@ use MY\Base\Helper\ModelHelper as M;
 
 class PostModel extends BaseModel
 {
-    public static function get()
+    public static function getPostBySlug($slug)
     {
+        $sql="SELECT *,post.id
+FROM `post` AS `post` 
+LEFT JOIN `user` AS `l_post_user`
+    ON `l_post_user`.`id` = `post`.`user_id`  
+WHERE `post`.`slug` = ? AND `post`.`public` = TRUE ";
+        $item=M::DB()->fetch($sql,$slug);
+        return $item;
     }
     public static function getPosts($pageNum,$pageSize=5)
     {
@@ -97,5 +104,28 @@ LEFT JOIN `user` AS `l_post_user`
     ON `l_post_user`.`id` = `post`.`user_id`  
 WHERE `post_tags`.`id` = ? AND `post`.`public` = TRUE ";
         list($total,$list)=parent::listBySql($sql,$pageNum,$pageSize,$tagId);
+    }
+    
+    public static function addPost($user_id,$title,$slug,$content)
+    {
+        $public = (rand(0, 3) > 0)?true:false;
+        $published_at = $public?(new \DateTimeImmutable(date('r', rand(time(), strtotime('-2 years')))))->format('Y-m-d H:i:s'):null;
+        $created_at = (new \DateTimeImmutable())->format('Y-m-d H:i:s');
+        $updated_at = (new \DateTimeImmutable())->format('Y-m-d H:i:s');
+        $data=[
+            'slug'=>$slug,
+            'title'=>$title,
+            'content'=>$content,
+            'created_at'=>$created_at,
+            'updated_at'=>$updated_at,
+            'public'=>$public,
+            'published_at'=>$published_at,
+            'deleted_at'=>null,
+            'user_id'=>$user_id,
+        ];
+        
+        M::DB()->insertData('post',$data);
+        
+        return M::DB()->lastInsertId();
     }
 }

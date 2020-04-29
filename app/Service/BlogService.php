@@ -8,7 +8,8 @@ namespace MY\Service;
 
 use MY\Base\BaseService;
 use MY\Base\Helper\ServiceHelper as S;
-use MY\Base\Helper\ModelHelper as M;
+
+use MY\Model\CommentModel;
 use MY\Model\PostModel;
 use MY\Model\PostTagModel;
 use MY\Model\TagModel;
@@ -36,26 +37,25 @@ class BlogService extends BaseService
     }
     public function getPostData($slug)
     {
-        $sql="SELECT *
-FROM `post` AS `post` 
-LEFT JOIN `user` AS `l_post_user`
-    ON `l_post_user`.`id` = `post`.`user_id`  
-WHERE `post`.`slug` = ? AND `post`.`public` = TRUE ";
-        $item=M::DB()->fetch($sql,$label);
-    $sql="SELECT *
-FROM `tag` AS `post_tags` 
-INNER JOIN `post_tag` AS `l_post_tags_pivot`
-    ON `l_post_tags_pivot`.`tag_id` = `post_tags`.`id`  
-WHERE `l_post_tags_pivot`.`post_id` IN (?)";
-        $item=M::DB()->fetchAll($sql,$post['id']);
-    $sql="SELECT *
-FROM `comment` AS `post_comments` 
-LEFT JOIN `user` AS `post_comments_user`
-    ON `post_comments_user`.`id` = `post_comments`.`user_id`  
-WHERE `post_comments`.`post_id` IN (?) AND `post_comments`.`public` = TRUE 
-ORDER BY `post_comments`.`published_at` DESC";
-        $item=M::DB()->fetchAll($sql,$post['id']);
-        return $item;
+
+        $item=PostModel::getPostBySlug($slug);
+        if(!$item){
+            return null;
+        }
+        $tags=TagModel::getTagsByPostId($item['id']);
+        
+    
+        $comments=CommentModel::getCommentsByPostId($item['id']);
+        $item['date_published_at']=date('H:i:s d.m.Y',strtotime($item['published_at']));
+        foreach($comments as &$v){
+            $v['date_created_at']=date('H:i d.m.Y',strtotime($v['created_at']));
+            $v['date_published_at']=date('d.m.Y',strtotime($v['published_at']));
+        }
+        $ret=[];
+        $ret['post']=$item;
+        $ret['tags']=$tags;
+        $ret['comments']=$comments;
+        return $ret;
     }
     public function getTagData($label, $pageNum)
     {

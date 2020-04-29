@@ -35,4 +35,10 @@ WHERE `l_post_tags_pivot`.`post_id` IN (%s)";
         }
         return $tags;
     }
+    public static function addPostTag($post_id,$tag_id)
+    {
+        $sql="INSERT INTO `post_tag` (`post_id`, `tag_id`) VALUES (?, ?)";
+        M::DB()->execute($sql,(int)$post_id,$tag_id);
+        return M::DB()->lastInsertId();
+    }
 }

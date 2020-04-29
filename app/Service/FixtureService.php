@@ -8,13 +8,15 @@ namespace MY\Service;
 
 use MY\Base\BaseService;
 use MY\Base\Helper\ServiceHelper as S;
-use MY\Base\Helper\ModelHelper as M;
+
+use MY\Model\CommentModel;
+use MY\Model\PostModel;
+use MY\Model\PostTagModel;
+use MY\Model\TagModel;
 use MY\Model\UserModel;
 
 use Faker\Factory;
 use Faker\Generator;
-
-use Yiisoft\Security\Random;
 
 
 class FixtureService extends BaseService
@@ -61,7 +63,7 @@ class FixtureService extends BaseService
         }
         ////
         foreach ($tagWords as $word) {
-            $tag = $this->getOrCreateTag($word);
+            $tag = TagModel::getOrCreateTag($word);
             $this->tags[] = $tag;
         }
     }
@@ -74,8 +76,11 @@ class FixtureService extends BaseService
         for ($i = 0; $i < $count; ++$i) {
             /** @var User $postUser */
             $user_id = $this->users[array_rand($this->users)];
-            //
-            $post_id=$this->addPost($user_id);
+            
+            $title=$this->faker->text(64);
+            $slug=static::RandomString(128);
+            $content=$this->faker->realText(rand(1000, 4000));
+            $post_id=PostModel::addPost($user_id,$title,$slug,$content);
             if(!$post_id){
                 var_dump($post_id);
                 continue;
@@ -83,87 +88,17 @@ class FixtureService extends BaseService
             $postTags = (array)array_rand($this->tags, rand(1, count($this->tags)));
             foreach ($postTags as $key) {
                 $tag_id=$this->tags[$key];
-                $this->addPostTag($post_id,$tag_id);
+                PostTagModel::addPostTag($post_id,$tag_id);
             }
             $commentsCount = rand(0, $count);
             for ($j = 0; $j <= $commentsCount; ++$j) {
                 $comment_user_id = $this->users[array_rand($this->users)];
-                $this->addComment($comment_user_id,$post_id);
+                $content= $this->faker->realText(rand(100, 500));
+                CommentModel::addComment($comment_user_id,$post_id,$content);
             }
         }
     }
-        
-    protected function getOrCreateTag($word)
-    {
-        $sql="select id from tag where label=?";
-        $id=M::DB()->fetchColumn($sql,$word);
-        if(!empty($id)){
-            return $id;
-        }
-        $created_at = (new \DateTimeImmutable())->format('Y-m-d H:i:s');
-        $sql="insert into tag (`label`, `created_at`) VALUES (?,?)";
-        M::DB()->execute($sql,$word,$created_at);
-        
-        return M::DB()->lastInsertId();
-    }
 
-    protected function addPost($user_id)
-    {
-        $title=$this->faker->text(64);
-        $slug=staic::RandomString(128);
-        $content=$this->faker->realText(rand(1000, 4000));
-
-        $public = (rand(0, 3) > 0)?true:false;
-        $published_at = $public?(new \DateTimeImmutable(date('r', rand(time(), strtotime('-2 years')))))->format('Y-m-d H:i:s'):null;
-        $created_at = (new \DateTimeImmutable())->format('Y-m-d H:i:s');
-        $updated_at = (new \DateTimeImmutable())->format('Y-m-d H:i:s');
-        $data=[
-            'slug'=>$slug,
-            'title'=>$title,
-            'content'=>$content,
-            'created_at'=>$created_at,
-            'updated_at'=>$updated_at,
-            'public'=>$public,
-            'published_at'=>$published_at,
-            'deleted_at'=>null,
-            'user_id'=>$user_id,
-        ];
-        
-        M::DB()->insertData('post',$data);
-        
-        return M::DB()->lastInsertId();
-    }
-    protected function addPostTag($post_id,$tag_id)
-    {
-        $sql="INSERT INTO `post_tag` (`post_id`, `tag_id`) VALUES (?, ?)";
-        M::DB()->execute($sql,(int)$post_id,$tag_id);
-        return M::DB()->lastInsertId();
-    }
-    protected function addComment($user_id,$post_id)
-    {
-        $content= $this->faker->realText(rand(100, 500));
-        $public = (rand(0, 3) > 0)?true:false;
-        $published_at = $public?(new \DateTimeImmutable(date('r', rand(time(), strtotime('-1 years')))))->format('Y-m-d H:i:s'):null;
-        $created_at = (new \DateTimeImmutable())->format('Y-m-d H:i:s');
-        $updated_at = (new \DateTimeImmutable())->format('Y-m-d H:i:s');
-        $data=[
-            'public'=>$public,
-            'content'=>$content,
-            
-            'created_at'=>$created_at,
-            'updated_at'=>$updated_at,
-            'published_at'=>$published_at,
-            'public'=>$public,
-            'deleted_at'=>null,
-            'post_id'=>$post_id,
-            
-            'user_id'=>$user_id,
-        ];
-        
-        M::DB()->insertData('comment',$data);
-        
-        return M::DB()->lastInsertId();
-    }
     protected static function RandomString(int $length = 32): string
     {
         if ($length < 1) {
@@ -171,6 +106,6 @@ class FixtureService extends BaseService
         }
 
         $bytes = random_bytes($length);
-        return substr(StringHelper::base64UrlEncode($bytes), 0, $length);
+        return substr(strtr(base64_encode($bytes), '+/', '-_'), 0, $length);
     }
 }

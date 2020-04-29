@@ -40,7 +40,7 @@ class App extends DuckPhp_App
             '~^blog/archive/(?<year>\d+)$'      =>"#blog@archive_yearly",
             '~^blog/archive/(?<year>\d+)-(?<month>\d+)(/page(?<page>\d+))?$'    =>"#blog@archive_monthly",
             '~^blog/tag/(?<label>\w+)(/page(?<page>\d+))?$'                     =>"#blog@tag",
-            '~^blog/page/(?<slug>\w+)$'                                         =>"#blog@post",
+            '~^blog/page/(?<slug>\S+)$'                                         =>"#blog@post",
             '~^blog(/(?<id>\d+))?$'                                              =>"#blog@index",
         ];
         foreach($this->options['route_map_important'] as &$v){

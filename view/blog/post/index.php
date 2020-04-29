@@ -9,7 +9,7 @@
 use Yiisoft\Html\Html;
 
 ?>
-<h1><?=_h($post['title'] ?></h1>
+<h1><?=_h($post['title'])?></h1>
 <div>
     <span class="text-muted"><?=$post['date_published_at']?> by</span>
     <a href="/user/<?=$post['login']?>"><?=$post['login']?></a></div>
@@ -18,7 +18,8 @@ if (!empty($tags)) {
 ?><div class="mt-3"><?php
 }
 foreach ($tags as $v) {
-    ?><a class="btn btn-outline-secondary btn-sm m-1" href="/blog/tag/<?=$v['label']?>"><?=_h($v['label'])?></a><?
+    ?><a class="btn btn-outline-secondary btn-sm m-1" href="/blog/tag/<?=$v['label']?>"><?=_h($v['label'])?></a><?php
+}
 if (!empty($tags)) {
 ?></div><?php
 }
@@ -29,20 +30,18 @@ if (!empty($tags)) {
         <div class="media mt-4 shadow p-3 rounded">
             <div class="media-body">
                 <div>
-                    <a href="/user/<?=$v['login']?>"><?=$v['login']?></a>
-                    <span class="text-muted">
-                        <i>created at</i> <?=$v['date_created_at'] ?>
-                    </span>
+                    <a href="/user/<?=$v['login']?>"><?=$v['login']?></a>                    <span class="text-muted">
+                        <i>created at</i> <?=$v['date_created_at'] ?>                    </span>
                     <?php
                     if ($v['public']) { ?>
                         <span class="text-muted">
-                            <i>published at</i> <?=$v['date_publish_at'] ?>
+                            <i>published at</i> <?=$v['date_published_at'] ?>
                         </span>
                     <?php
                     }
 ?>
                     <span><?php
-                    if ($v['public']) { 
+                    if (!$v['public']) { 
                         ?><span class="border border-info rounded px-2 text-muted">hidden</span>
 <?php
                     }
