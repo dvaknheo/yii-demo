@@ -23,7 +23,7 @@ class user
     {
         $pageNum=(int)$this->getAttribute('page',1);
 
-        list($data,$total) = UserService::G()->listByPage($pageNum);
+        list($total,$data) = UserService::G()->listByPage($pageNum);
         
         C::PageExt('/user/page-{page}',$pageNum);
         $pagehtml=C::PageHtml($total);

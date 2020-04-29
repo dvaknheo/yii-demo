@@ -32,27 +32,19 @@ class App extends DuckPhp_App
     }
     public function onInit()
     {
-        
         static::Pager(BasePager::G());
-
-        $this->options['route_map_important']=[
-            '~^user(/page-(?<page>\d+))?$'      => '#user->index',
-            '~^user/(?<login>\w+)$'             => '#user->profile',
-
-            '~^api/user/(?<login>\w+)$'         => "#api@profile",
-            
-            '~^blog/archive/(?<year>\d+)$'      =>"#blog@archive_yearly",
-            '~^blog/archive/(?<year>\d+)-(?<month>\d+)(/page(?<page>\d+))?$'    =>"#blog@archive_monthly",
-            '~^blog/tag/(?<label>\w+)(/page(?<page>\d+))?$'                     =>"#blog@tag",
-            '~^blog/page/(?<slug>\S+)$'                                         =>"#blog@post",
-            '~^blog(/(?<id>\d+))?$'                                              =>"#blog@index",
-        ];
-        foreach($this->options['route_map_important'] as &$v){
-            $v=str_replace('#','MY\\Controller\\',$v);
+        $ret = parent::onInit();
+        
+        $routes=static::LoadConfig('routes');
+        
+        // fixe ext routemap rewrite
+        $namespace_prefix=$this->options['namespace'].'\\Controller\\';
+        foreach($routes as &$v){
+            $v=str_replace('#',$namespace_prefix,$v);
         }
         unset($v);
         
-        $ret = parent::onInit();
+        static::assignImportantRoute($routes);
         
         return $ret;
     }
