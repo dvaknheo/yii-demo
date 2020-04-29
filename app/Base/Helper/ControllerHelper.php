@@ -47,6 +47,14 @@ class ControllerHelper extends Helper
         static::header('Content-Type:application/xml; UTF-8');
         echo $content;
     }
+    public static function MyExitJson($data)
+    {
+        $ret=[
+            'status'=>'success',
+            'data'=>$data,
+        ];
+        return static::ExitJson($ret,true);
+    }
 
     protected static function buildXml($element, $data): void
     {

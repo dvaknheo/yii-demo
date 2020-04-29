@@ -72,7 +72,20 @@ class blog
         $year = (int)$this->getAttribute('year', null);
         $month = (int)$this->getAttribute('month', null);
         
-        $data = BlogService::G()->getArchiveDataMonthly($year,$month,$pageNum);
+        list($total,$list) = BlogService::G()->getArchiveDataMonthly($year,$month,$pageNum);
+        C::PageExt('/user/page-{page}',$pageNum);
+        $pagehtml=C::PageHtml($total);
+        
+        
+        $monthName = \DateTime::createFromFormat('!m', ''.$month)->format('F');
+
+        $data=[
+            'year'=>$year,
+            'monthName'=>$monthName,
+            'list'=>$list,
+            'total'=>$total,
+            'pagehtml'=>$pagehtml,
+        ];
         
         C::Show($data,'blog/archive/monthly-archive');
     }

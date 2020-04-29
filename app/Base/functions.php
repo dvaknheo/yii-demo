@@ -9,3 +9,9 @@ if (!function_exists('_h')) {
         return App::H(...$args);
     }
 }
+if (!function_exists('url')) {
+    function url(...$args)
+    {
+        return App::URL(...$args);
+    }
+}

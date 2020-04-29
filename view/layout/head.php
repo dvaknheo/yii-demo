@@ -16,6 +16,7 @@ if($t==='/'){
 if($t==='/user'){
     NavBar::counter(1);
 }
+NavBar::counter(1);
 ?><!DOCTYPE html>
 <html lang="">
 <head>

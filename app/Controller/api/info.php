@@ -23,10 +23,10 @@ class info
     public function v2()
     {
         $data=[
-            'version'=>'1.0',
+            'version'=>'2.0',
             'author'=>'yiisoft',
         ];
-        C::ExitJson($data);
+        C::MyExitJson($data);
         return;
     }
 }

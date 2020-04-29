@@ -10,12 +10,6 @@ use MY\Base\BaseService;
 use MY\Base\Helper\ServiceHelper as S;
 use MY\Base\Helper\ModelHelper as M;
 
-use App\Blog\Entity\Post;
-use App\Blog\Entity\Tag;
-use App\Blog\Archive\ArchiveRepository;
-
-use Yiisoft\Data\Paginator\OffsetPaginator;
-
 class BlogService extends BaseService
 {
     private const POSTS_PER_PAGE = 3;
@@ -30,8 +24,6 @@ class BlogService extends BaseService
             ->withPageSize(self::POSTS_PER_PAGE)
             ->withCurrentPage($pageNum);
 
-        $archive = $this->getObject(ArchiveRepository::class)->getFullArchive()->withLimit(self::ARCHIVE_MONTHS_COUNT);
-        $tags = $this->getORM()->getRepository(Tag::class)->getTagMentions(self::POPULAR_TAGS_COUNT);
         
         $data = [
             'paginator' => $paginator,
@@ -149,38 +141,55 @@ ORDER BY `year` DESC, `month` DESC";
         $data=M::DB()->fetchAll($sql);
         return $data;
     }
-    public function getArchiveDataMonthly($year,$month,$pageNum)
+    public function getArchiveDataMonthly($year,$month,$pageNum,$pageSize=5)
     {
-/*
+        $begin = (new \DateTimeImmutable())->setDate($year, $month, 1)->setTime(0, 0, 0);
+        $end = $begin->setDate($year, $month + 1, 1)->setTime(0, 0, -1);
+        $begin=$begin->format('Y-m-d H:i:s O');
+        $end=$end->format('Y-m-d H:i:s O');
+        
+        $sql="SELECT *
 FROM `post` AS `post`
-WHERE `post`.`published_at` BETWEEN '2019-09-01T00:00:00+08:00' AND '2019-09-30T23:59:59+08:00' AND `post`.`public` = TRUE 
-2020-04-28 15:00:45.666100 [info][application] SELECT `post`.`id` AS `c0`, `post`.`slug` AS `c1`, `post`.`title` AS `c2`, `post`.`public` AS `c3`, `post`.`content` AS `c4`, `post`.`created_at` AS `c5`, `post`.`updated_at` AS `c6`,
-`post`.`published_at` AS `c7`, `post`.`deleted_at` AS `c8`, `post`.`user_id` AS `c9`
-FROM `post` AS `post`
-WHERE `post`.`published_at` BETWEEN '2019-09-01T00:00:00+08:00' AND '2019-09-30T23:59:59+08:00' AND `post`.`public` = TRUE 
-ORDER BY `post`.`published_at` DESC
-LIMIT 3 OFFSET 0
-2020-04-28 15:00:45.666500 [info][application] SELECT `post_user`.`id` AS `c0`, `post_user`.`token` AS `c1`, `post_user`.`login` AS `c2`, `post_user`.`password_hash` AS `c3`, `post_user`.`created_at` AS `c4`, `post_user`.`updated_at`
-AS `c5`
+WHERE `post`.`published_at` BETWEEN ? AND ? AND `post`.`public` = TRUE";
+        $sql_total=M::SqlForCountSimply($sql,$begin,$end);
+        $sql_page=M::SqlForPage($sql, $pageNum, $pageSize);
+        $total=M::DB()->fetchColumn($sql_total,$begin,$end);
+        $list=M::DB()->fetchAll($sql_page,$begin,$end);
+        
+        if(empty($list)){
+            return [0,[]];
+        }
+        $sql="SELECT *
 FROM `user` AS `post_user`
-WHERE `post_user`.`id` IN (3 ,2 ,10) 
-2020-04-28 15:00:45.666800 [info][application] SELECT `l_post_tags_pivot`.`id` AS `c0`, `l_post_tags_pivot`.`post_id` AS `c1`, `l_post_tags_pivot`.`tag_id` AS `c2`, `post_tags`.`id` AS `c3`, `post_tags`.`label` AS `c4`,
-`post_tags`.`created_at` AS `c5`
+WHERE `post_user`.`id` IN (%s)";
+        $ids=implode(',',array_column($list,'user_id'));
+        
+        $data=M::DB()->fetchAll(sprintf($sql,$ids));
+        foreach($data as $v){
+            $users[$v['id']]=$v;
+        }
+        $sql="SELECT *
 FROM `tag` AS `post_tags` 
 INNER JOIN `post_tag` AS `l_post_tags_pivot`
     ON `l_post_tags_pivot`.`tag_id` = `post_tags`.`id`  
-WHERE `l_post_tags_pivot`.`post_id` IN (1 ,4 ,6) 
-*/
-        $archive = $archiveRepo->getFullArchive()->withLimit(12);
-        $tags = $this->getORM()->getRepository(Tag::class)->getTagMentions(self::POPULAR_TAGS_COUNT);
+WHERE `l_post_tags_pivot`.`post_id` IN (%s)";
+        $ids=implode(',',array_column($list,'id'));
+        $data=M::DB()->fetchAll(sprintf($sql,$ids));
         
-        $data = [
-            'year' => $year,
-            'month' => $month,
-            'paginator' => $paginator,
-
-        ];
-        return $data;
+        $tags=[];
+        foreach($data as $v){
+            $tags[$v['post_id']]=$tags[$v['post_id']]??[];
+            $tags[$v['post_id']][]=$v;
+        }
+        foreach($list as &$v){
+            $v['user']=$users[$v['user_id']]??[];
+            $v['tags']=$tags[$v['id']]??[];
+            $v['content_short']=mb_substr($v['content'], 0, 400). (mb_strlen($v['content']) > 400 ? '…' : '');
+            $v['month_published_at']=date('M, d',strtotime($v['published_at']));
+        }
+        
+        
+        return [$total,$list];
     }
     public function getArchiveDataYearly($year)
     {

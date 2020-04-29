@@ -99,8 +99,8 @@ class UserService extends BaseService
     }
     public function sendMail($body, $file)
     {
-        $to = $this->parameters->get('supportEmail');
-        $from = $this->parameters->get('mailer.username');
+        $to = S::Setting('supportEmail');
+        $from = S::Setting('mailer.username');
         
         foreach (['subject', 'name', 'email', 'content'] as $name) {
             if (empty($body[$name])) {

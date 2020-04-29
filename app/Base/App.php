@@ -19,7 +19,7 @@ class App extends DuckPhp_App
         require_once(__DIR__.'/functions.php');
         parent::__construct();
         
-        //$this->options['skip_exception_check'] = true; 
+        $this->options['skip_exception_check'] = true; 
         $this->options['use_short_functions'] = true; 
         
         $this->options['skip_404_handler'] = true;
@@ -147,12 +147,20 @@ class App extends DuckPhp_App
     
     public function _ExitJson($ret, $exit = true)
     {
-        $ret=[
-            'status'=>'success',
-            'data'=>$ret,
-        ];
         static::header('Content-Type:application/json');
         $flag = JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK;
         echo json_encode($ret, $flag);
+    }
+    public function _H(&$str)
+    {
+        // for compatable;
+        
+        $doubleEncode=true;
+        return htmlspecialchars(
+        $str,
+        ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5,
+        ini_get('default_charset'),
+        $doubleEncode
+    );
     }
 }

@@ -33,6 +33,6 @@ class api
             C::Exit404();
             return;
         }
-        C::ExitJson($data);
+        C::MyExitJson($data);
     }
 }
