@@ -8,6 +8,7 @@ namespace MY\Controller;
 use MY\Base\Helper\ControllerHelper as C;
 use MY\Service\UserService;
 use MY\Service\SessionService;
+use MY\Service\FixtureService;
 
 class Main
 {
@@ -102,7 +103,9 @@ class Main
     }
     public function test2()
     {
-        //
+        $x=FixtureService::G()->run(10);
+                var_dump(date(DATE_ATOM));
+
     }
 
 }
