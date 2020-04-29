@@ -34,7 +34,7 @@ if (!empty($tags)) {
                         <i>created at</i> <?=$v['date_created_at'] ?>
                     </span>
                     <?php
-                    if ($v['is_public']) { ?>
+                    if ($v['public']) { ?>
                         <span class="text-muted">
                             <i>published at</i> <?=$v['date_publish_at'] ?>
                         </span>
@@ -42,7 +42,7 @@ if (!empty($tags)) {
                     }
 ?>
                     <span><?php
-                    if (!$v['is_public']) { 
+                    if ($v['public']) { 
                         ?><span class="border border-info rounded px-2 text-muted">hidden</span>
 <?php
                     }

@@ -48,6 +48,22 @@ class UserModel extends BaseModel
         M::DB()->insertData('user',$data);
         return M::DB()->lastInsertId();
     }
+    ///////////////
+    public static function getUserByIdList($id_list)
+    {
+        if(empty($id_list)){
+            return [];
+        }
+        $sql="SELECT * FROM `user` AS `post_user` WHERE `post_user`.`id` IN (%s)";
+        $ids=implode(',',$id_list);
+        $data=M::DB()->fetchAll(sprintf($sql,$ids));
+        foreach($data as $v){
+            $users[$v['id']]=$v;
+        }
+        return $users;
+    }
+    
+    
 }
 /*
 
